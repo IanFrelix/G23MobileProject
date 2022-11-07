@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Image, StyleSheet, useWindowDimensions } from 'react-native';
 import Logo from '../../../assets/G23Images/musicnote.png';
 import CustomInput from '../../components/CustomInput';
+import CustomHeader from '../../components/CustomHeader';
 
 const SignInScreen = () => {
     const [email, setEmail] = useState(''); 
@@ -13,6 +14,8 @@ const SignInScreen = () => {
             <Image source={Logo} 
             style={[styles.logo, {height: height * 0.3}]} 
             resizeMode="contain"/>
+
+            <CustomHeader />
 
             <CustomInput 
             placeholder="Email" 
