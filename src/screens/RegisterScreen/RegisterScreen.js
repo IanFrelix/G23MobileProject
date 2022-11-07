@@ -3,9 +3,13 @@ import { View, Image, StyleSheet, useWindowDimensions } from 'react-native';
 import Logo from '../../../assets/G23Images/musicnote.png';
 import CustomInput from '../../components/CustomInput';
 
-const SignInScreen = () => {
+const RegisterScreen = () => {
+
+    const [firstName, setFirstName] = useState(''); 
+    const [lastName, setlastName] = useState(''); 
     const [email, setEmail] = useState(''); 
     const [password, setPassword] = useState(''); 
+    
 
     const {height} = useWindowDimensions();
     return (
@@ -13,6 +17,18 @@ const SignInScreen = () => {
             <Image source={Logo} 
             style={[styles.logo, {height: height * 0.3}]} 
             resizeMode="contain"/>
+
+            <CustomInput 
+            placeholder="First Name" 
+            value={firstName} 
+            setValue={setFirstName}
+            />
+
+            <CustomInput 
+            placeholder="Last Name" 
+            value={lastName} 
+            setValue={setlastName}
+            />
 
             <CustomInput 
             placeholder="Email" 
@@ -24,7 +40,7 @@ const SignInScreen = () => {
             placeholder="Password" 
             value={password} 
             setValue={setPassword}
-            secureTextEntry={true}
+            secureTextEntry
             />
         </View>
     );
@@ -44,4 +60,4 @@ const styles = StyleSheet.create({
 
     },
 });
-export default SignInScreen
+export default RegisterScreen
