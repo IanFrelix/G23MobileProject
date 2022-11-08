@@ -1,8 +1,21 @@
 import React, { useState } from 'react';
-import { View, Image, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
 import Logo from '../../../assets/G23Images/musicnote.png';
 import CustomInput from '../../components/CustomInput';
+import CustomButton from '../../components/CustomButton';
 import CustomHeader from '../../components/CustomHeader';
+
+const onSignInPressed = () => {
+    console.warn("Sign in");
+}
+
+const onForgotPasswordPressed = () => {
+    console.warn("onForgotPasswordPressed");
+}
+
+const onSignUpPress = () => {
+    console.warn("onSignUpPress");
+}
 
 const SignInScreen = () => {
     const [email, setEmail] = useState(''); 
@@ -10,33 +23,54 @@ const SignInScreen = () => {
 
     const {height} = useWindowDimensions();
     return (
-        <View style={styles.root}>
-            <Image source={Logo} 
-            style={[styles.logo, {height: height * 0.3}]} 
-            resizeMode="contain"/>
+        <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={styles.root}>
+                <Image 
+                    source={Logo} 
+                    style={[styles.logo, {height: height * 0.3}]} 
+                    resizeMode="contain"
+                />
 
-            <CustomHeader />
+                <CustomHeader />
 
-            <CustomInput 
-            placeholder="Email" 
-            value={email} 
-            setValue={setEmail}
-            />
+                <CustomInput 
+                    placeholder="Email" 
+                    value={email} 
+                    setValue={setEmail}
+                />
 
-            <CustomInput 
-            placeholder="Password" 
-            value={password} 
-            setValue={setPassword}
-            secureTextEntry={true}
-            />
-        </View>
+                <CustomInput 
+                    placeholder="Password" 
+                    value={password} 
+                    setValue={setPassword}
+                    secureTextEntry={true}
+                />
+
+                <CustomButton 
+                    text="Sign In" 
+                    onPress={onSignInPressed} 
+                />
+
+                <CustomButton 
+                    text="Forgot password?" 
+                    onPress={onForgotPasswordPressed} 
+                    type="TERTIARY" 
+                />
+
+                <CustomButton 
+                    text="Don't have an account? Register here!" 
+                    onPress={onSignUpPress} 
+                    type="TERTIARY" 
+                />
+            </View>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
 
     root: {
-        alighnItems: 'center',
+        alignItems: 'center',
         padding: 20,
     },
 
