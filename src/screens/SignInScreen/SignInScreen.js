@@ -4,26 +4,28 @@ import Logo from '../../../assets/G23Images/musicnote.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import CustomHeader from '../../components/CustomHeader';
-
-const onSignInPressed = () => {
-    console.warn("Sign in");
-}
-
-const onForgotPasswordPressed = () => {
-    console.warn("onForgotPasswordPressed");
-}
-
-const onSignUpPress = () => {
-    console.warn("onSignUpPress");
-}
+import { useNavigation } from '@react-navigation/native';
 
 const SignInScreen = () => {
     const [email, setEmail] = useState(''); 
     const [password, setPassword] = useState(''); 
 
     const {height} = useWindowDimensions();
+    const navigation = useNavigation();
+
+    const onSignInPressed = () => {
+        console.warn("Sign in");
+    }
+    
+    const onForgotPasswordPressed = () => {
+        console.warn("onForgotPasswordPressed");
+    }
+    
+    const onSignUpPress = () => {
+        navigation.navigate("Register");
+    }
     return (
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView showsVerticalScrollIndicator={false} style={styles.base}>
             <View style={styles.root}>
                 <Image 
                     source={Logo} 
@@ -69,9 +71,14 @@ const SignInScreen = () => {
 
 const styles = StyleSheet.create({
 
+    base: {
+        flex: 1,
+        backgroundColor: '#3d3d3d'
+    },
+
     root: {
         alignItems: 'center',
-        padding: 20,
+        padding: 20
     },
 
     logo: {
