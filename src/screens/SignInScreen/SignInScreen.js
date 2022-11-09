@@ -4,6 +4,7 @@ import Logo from '../../../assets/G23Images/musicnote.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import CustomHeader from '../../components/CustomHeader';
+import RegisterScreen from '../RegisterScreen'
 import { useNavigation } from '@react-navigation/native';
 
 const SignInScreen = () => {
@@ -14,7 +15,7 @@ const SignInScreen = () => {
     const navigation = useNavigation();
 
     const onSignInPressed = () => {
-        console.warn("Sign in");
+        navigation.navigate('Home');
     }
     
     const onForgotPasswordPressed = () => {
@@ -22,7 +23,7 @@ const SignInScreen = () => {
     }
     
     const onSignUpPress = () => {
-        navigation.navigate("Register");
+        navigation.navigate('Register');
     }
     return (
         <ScrollView showsVerticalScrollIndicator={false} style={styles.base}>

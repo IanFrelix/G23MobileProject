@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
+import { View, Image, StyleSheet, useWindowDimensions, ScrollView, FlatList } from 'react-native';
 import Logo from '../../../assets/G23Images/musicnote.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 
 const RegisterScreen = () => {
+
 
     const [firstName, setFirstName] = useState(''); 
     const [lastName, setlastName] = useState(''); 
@@ -15,12 +16,23 @@ const RegisterScreen = () => {
     const {height} = useWindowDimensions();
     const navigation = useNavigation();
 
-    const onSignInPressed = () => {
-        console.warn("Create Account")
+    const onSignUpPressed = async () => {
+
+        var obj = {firstName, lastName, email, password};
+        var js = JSON.stringify(obj);
+        var url = 'https://tunetable23.herokuapp.com/users';
+
+        await fetch(url, {method: 'POST', body:js, headers:{'Content-Type':'application/json'}})
+        .then(res => res.json())
+        .catch(error => console.error('Error:', error))
+        .then(response => console.log('Success:', response));
+
+        console.log(obj)
+        navigation.navigate('SignIn');
     }
 
     const onSignInPress = () => {
-        navigation.navigate("SignIn");
+        navigation.navigate('SignIn');
     }
 
     return (
@@ -57,7 +69,7 @@ const RegisterScreen = () => {
 
                 <CustomButton 
                     text="Create Account" 
-                    onPress={onSignInPressed} 
+                    onPress={onSignUpPressed} 
                 />
 
                 <CustomButton 
