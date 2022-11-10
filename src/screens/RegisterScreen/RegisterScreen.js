@@ -24,11 +24,20 @@ const RegisterScreen = () => {
 
         await fetch(url, {method: 'POST', body:js, headers:{'Content-Type':'application/json'}})
         .then(res => res.json())
-        .catch(error => console.error('Error:', error))
-        .then(response => console.log('Success:', response));
+        .then(res => {
+            if (res.success) {
+                console.warn(res.message);
 
-        console.log(obj)
-        navigation.navigate('SignIn');
+                console.log(obj)
+                navigation.navigate('SignIn');
+            }
+            else {
+                console.warn(res);
+            }
+        })
+
+        // console.log(obj)
+        // navigation.navigate('SignIn');
     }
 
     const onSignInPress = () => {
