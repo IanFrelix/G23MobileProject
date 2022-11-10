@@ -4,7 +4,6 @@ import Logo from '../../../assets/G23Images/musicnote.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import CustomHeader from '../../components/CustomHeader';
-import RegisterScreen from '../RegisterScreen'
 import { useNavigation } from '@react-navigation/native';
 
 const SignInScreen = () => {
@@ -14,8 +13,23 @@ const SignInScreen = () => {
     const {height} = useWindowDimensions();
     const navigation = useNavigation();
 
-    const onSignInPressed = () => {
+    const onSignInPressed = async () => {
+        var obj = {email, password};
+        var js = JSON.stringify(obj);
+        try {
+            var url = 'https://tunetable23.herokuapp.com/users/auth';
+            await fetch(url, {method: 'POST', body:js, headers:{'Content-Type':'application/json'}})
+            .then(res => res.json())
+        }
+        catch (e) {
+            alert(e.toString());
+            return;
+        }
+
+        console.log(obj)
+    
         navigation.navigate('Home');
+        
     }
     
     const onForgotPasswordPressed = () => {
