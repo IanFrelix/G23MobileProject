@@ -18,17 +18,29 @@ const SignInScreen = () => {
         var js = JSON.stringify(obj);
         try {
             var url = 'https://tunetable23.herokuapp.com/users/auth';
+
             await fetch(url, {method: 'POST', body:js, headers:{'Content-Type':'application/json'}})
             .then(res => res.json())
+            .then(res => {
+                if (res.success) {
+                    console.warn(res.message);
+
+                    console.log(obj)
+                    navigation.navigate('Home');
+                }
+                else {
+                    console.warn(res);
+                }
+            })
         }
         catch (e) {
             alert(e.toString());
             return;
         }
 
-        console.log(obj)
+        // console.log(obj)
     
-        navigation.navigate('Home');
+        // navigation.navigate('Home');
         
     }
     
