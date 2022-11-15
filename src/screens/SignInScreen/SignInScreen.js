@@ -7,6 +7,7 @@ import CustomHeader from '../../components/CustomHeader';
 import { useNavigation } from '@react-navigation/native';
 
 const SignInScreen = () => {
+    
     const [email, setEmail] = useState(''); 
     const [password, setPassword] = useState(''); 
 
@@ -37,11 +38,6 @@ const SignInScreen = () => {
             alert(e.toString());
             return;
         }
-
-        // console.log(obj)
-    
-        // navigation.navigate('Home');
-        
     }
     
     const onForgotPasswordPressed = () => {
@@ -115,4 +111,5 @@ const styles = StyleSheet.create({
 
     },
 });
+
 export default SignInScreen

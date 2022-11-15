@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Image, StyleSheet, useWindowDimensions, ScrollView, FlatList } from 'react-native';
+import { View, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
 import Logo from '../../../assets/G23Images/musicnote.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
@@ -7,9 +7,9 @@ import { useNavigation } from '@react-navigation/native';
 
 const RegisterScreen = () => {
 
-
     const [firstName, setFirstName] = useState(''); 
-    const [lastName, setlastName] = useState(''); 
+    const [lastName, setLastName] = useState('');
+    const [username, setUsername] = useState(''); 
     const [email, setEmail] = useState(''); 
     const [password, setPassword] = useState(''); 
     
@@ -18,7 +18,7 @@ const RegisterScreen = () => {
 
     const onSignUpPressed = async () => {
 
-        var obj = {firstName, lastName, email, password};
+        var obj = {firstName, lastName, username, email, password};
         var js = JSON.stringify(obj);
         var url = 'https://tunetable23.herokuapp.com/users';
 
@@ -35,9 +35,6 @@ const RegisterScreen = () => {
                 console.warn(res);
             }
         })
-
-        // console.log(obj)
-        // navigation.navigate('SignIn');
     }
 
     const onSignInPress = () => {
@@ -60,7 +57,13 @@ const RegisterScreen = () => {
                 <CustomInput 
                 placeholder="Last Name" 
                 value={lastName} 
-                setValue={setlastName}
+                setValue={setLastName}
+                />
+
+                <CustomInput 
+                placeholder="Username" 
+                value={username} 
+                setValue={setUsername}
                 />
 
                 <CustomInput 
@@ -111,4 +114,5 @@ const styles = StyleSheet.create({
 
     },
 });
+
 export default RegisterScreen
