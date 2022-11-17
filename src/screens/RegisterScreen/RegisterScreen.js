@@ -22,7 +22,11 @@ const RegisterScreen = () => {
         var js = JSON.stringify(obj);
         var url = 'https://tunetable23.herokuapp.com/users';
 
-        await fetch(url, {method: 'POST', body:js, headers:{'Content-Type':'application/json'}})
+        await fetch(url, {
+            method: 'POST', 
+            body: js, 
+            headers: {'Content-Type':'application/json'}
+        })
         .then(res => res.json())
         .then(res => {
             if (res.success) {

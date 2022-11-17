@@ -1,10 +1,21 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
-import Logo from '../../../assets/G23Images/musicnote.png';
+import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, FlatList } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = () => {
+
+    const [name, setName] = useState('');
+    
+    // retrieve user data (works)
+    AsyncStorage.getItem('user')
+    .then((value) => {
+        const data = JSON.parse(value);
+        console.warn(data.firstName); // (also works)
+        setName(data.firstName);
+    })
+    // at this point, can't render data variable (cant find variable)
 
     const {height} = useWindowDimensions();
     const navigation = useNavigation();
@@ -15,13 +26,19 @@ const HomeScreen = () => {
     
     const onFindSongPressed = () => {
         // navigation.navigate('Searchsong');
-        console.warn("onFindSongPressed");
+        console.warn("onFindSongPressed");  
     }
 
     return (
         <ScrollView style={styles.base}>
             <View style={styles.root}>
-                <Text>Home Screen success!</Text>
+                <Text>
+                    Welcome home, {name}!
+                </Text>
+
+                <Text>
+                    
+                </Text>
 
                 <CustomButton
                     text="Find Friends"

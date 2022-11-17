@@ -5,6 +5,7 @@ import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import CustomHeader from '../../components/CustomHeader';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignInScreen = () => {
     
@@ -20,13 +21,27 @@ const SignInScreen = () => {
         try {
             var url = 'https://tunetable23.herokuapp.com/users/auth';
 
-            await fetch(url, {method: 'POST', body:js, headers:{'Content-Type':'application/json'}})
+            await fetch(url, {
+                method: 'POST', 
+                body: js, 
+                headers: {'Content-Type':'application/json'}
+            })
             .then(res => res.json())
-            .then(res => {
+            .then(async res => {
                 if (res.success) {
                     console.warn(res.message);
+                    
+                    // store user data (this seems to work)
+                    await AsyncStorage.setItem('user', JSON.stringify({
+                        userId: res.results["_id"],
+                        firstName: res.results["firstName"],
+                        lastName: res.results["lastName"],
+                        email: res.results["email"],
+                        isVerified: res.results["isVerified"],
+                        totalLikes: res.results["totalLikes"]
+                        // figure out relationships later
+                    }));
 
-                    console.log(obj)
                     navigation.navigate('Home');
                 }
                 else {
@@ -47,6 +62,7 @@ const SignInScreen = () => {
     const onSignUpPress = () => {
         navigation.navigate('Register');
     }
+
     return (
         <ScrollView showsVerticalScrollIndicator={false} style={styles.base}>
             <View style={styles.root}>
