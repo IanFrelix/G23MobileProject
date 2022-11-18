@@ -1,21 +1,27 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, Alert } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileScreen = () => {
 
-    const jsonUser = AsyncStorage.getString('user');
-    const user = JSON.parse(jsonUser);
+    const [id, setID] = useState('');
+
+    // retrieve user id
+    AsyncStorage.getItem('user')
+    .then((value) => {
+        const data = JSON.parse(value);
+        setID(data.userId);
+    })
 
     const navigation = useNavigation();
 
     const onDeletePressed = async () => {
-        // retrieve user id
-        var obj = {userId: user._id};
+
+        var obj = {id};
         var js = JSON.stringify(obj);
-        var url = 'https://tunetable23.herokuapp.com/users/:userId/delete';
+        var url = `https://tunetable23.herokuapp.com/users/${id}/delete`;
 
         await fetch(url, {
             method: 'DELETE', 
@@ -30,9 +36,24 @@ const ProfileScreen = () => {
                 navigation.navigate('SignIn');
             }
             else {
-                console.warn(res);
+                // console.warn(res.success);
             }
         })
+    }
+
+    const deleteAlert = () => {
+        Alert.alert(
+            "Delete Account?",
+            "This will permanently erase your account data.",
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+              },
+              { text: "OK",
+                onPress: onDeletePressed}
+            ]
+          );
     }
 
     return (
@@ -40,7 +61,7 @@ const ProfileScreen = () => {
             <View style={styles.root}>
                 <CustomButton
                     text="Delete Account"
-                    onPress={onDeletePressed} 
+                    onPress={deleteAlert} 
                 />
             </View>
         </ScrollView>
