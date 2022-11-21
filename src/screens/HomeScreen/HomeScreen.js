@@ -39,10 +39,6 @@ const HomeScreen = () => {
                     Welcome home, {name}!
                 </Text>
 
-                <Text>
-                    
-                </Text>
-
                 <CustomButton
                     text="Find Friends"
                     onPress={onFindFriendPressed}
