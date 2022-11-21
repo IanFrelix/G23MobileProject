@@ -12,7 +12,6 @@ const HomeScreen = () => {
     AsyncStorage.getItem('user')
     .then((value) => {
         const data = JSON.parse(value);
-        console.warn(data.firstName); // (also works)
         setName(data.firstName);
     })
     // at this point, can't render data variable (cant find variable)
@@ -29,15 +28,15 @@ const HomeScreen = () => {
         console.warn("onFindSongPressed");  
     }
 
+    const onProfilePress = () => {
+        navigation.navigate('Profile');
+    }
+
     return (
         <ScrollView style={styles.base}>
             <View style={styles.root}>
                 <Text>
                     Welcome home, {name}!
-                </Text>
-
-                <Text>
-                    
                 </Text>
 
                 <CustomButton
@@ -48,6 +47,11 @@ const HomeScreen = () => {
                 <CustomButton
                     text="Find Songs"
                     onPress={onFindSongPressed}
+                />
+
+                <CustomButton 
+                    text="Profile Page"
+                    onPress={onProfilePress}
                 />
             </View>
         </ScrollView>
