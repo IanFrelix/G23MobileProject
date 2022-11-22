@@ -8,7 +8,7 @@ import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 // import SearchFilter from '../../components/SearchFilter';
 
-const SearchUserScreen = () => {
+const SearchSongScreen = () => {
 
     const [input, setInput] = useState('');
     const [data, setData] = useState([]);
@@ -18,7 +18,7 @@ const SearchUserScreen = () => {
         {
             return;
         }
-        var url = `https://tunetable23.herokuapp.com/users/search/${input}`;
+        var url = `https://tunetable23.herokuapp.com/songs/search/${input}`;
         fetch(url, {
             method: 'GET',
             headers: {'Content-Type':'application/json'}
@@ -50,7 +50,7 @@ const SearchUserScreen = () => {
                 <TextInput 
                     value={input}
                     onChangeText={text => changeText(text)}
-                    placeholder="Search user" 
+                    placeholder="Search song" 
                 />
             </View>
             <FlatList
@@ -59,7 +59,7 @@ const SearchUserScreen = () => {
                 renderItem={({item}) => {
                     return (
                         <View style={{marginVertical: 10}}>
-                            <Text style={styles.result}>{item.username}</Text>
+                            <Text style={styles.result}>{item.title}</Text>
                             <Text style={styles.border}/>
                         </View>
                     )
@@ -113,4 +113,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default SearchUserScreen
+export default SearchSongScreen

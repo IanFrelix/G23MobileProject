@@ -24,8 +24,7 @@ const HomeScreen = () => {
     }
     
     const onFindSongPressed = () => {
-        // navigation.navigate('Searchsong');
-        console.warn("onFindSongPressed");  
+        navigation.navigate('Searchsong');
     }
 
     const onProfilePress = () => {
