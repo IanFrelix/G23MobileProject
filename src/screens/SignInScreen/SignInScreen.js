@@ -39,8 +39,8 @@ const SignInScreen = () => {
                         username: res.results["username"],
                         email: res.results["email"],
                         isVerified: res.results["isVerified"],
-                        totalLikes: res.results["totalLikes"]
-                        // figure out relationships later
+                        totalLikes: res.results["totalLikes"],
+                        relationships: JSON.stringify(res.results["relationships"])
                     }));
 
                     navigation.navigate('Home');

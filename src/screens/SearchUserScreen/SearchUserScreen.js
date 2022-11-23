@@ -6,12 +6,22 @@ import Logo from '../../../assets/G23Images/musicnote.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import SearchFilter from '../../components/SearchFilter';
 
 const SearchUserScreen = () => {
 
     const [input, setInput] = useState('');
     const [data, setData] = useState([]);
+    const [id, setID] = useState('');
+    const [friends, setFriends] = useState([]); // just for testing
+
+    AsyncStorage.getItem('user')
+    .then((value) => {
+        const data = JSON.parse(value);
+        setID(data.userId);
+        // setFriends(JSON.parse(data.relationships)); **EVIL STRING, INFINITE PROMISE LOOP**
+    })
 
     const onSearch = () => {
         if (input !== '' || input !== ' ') {
@@ -31,6 +41,25 @@ const SearchUserScreen = () => {
                 }
             })
         }
+    }
+
+    const addFriend = async (friendId) => {
+        var url = `https://tunetable23.herokuapp.com/users/${id}/addFriend/${friendId}`;
+        await fetch(url, {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'}
+        })
+        .then(res => res.json())
+        .then(res => {
+            if (res.success) {
+                console.log(res.message);
+                console.log()
+                // if success, res.results = 0
+            }
+            else {
+                console.warn(res);
+            }
+        })
     }
 
     return (
@@ -53,7 +82,14 @@ const SearchUserScreen = () => {
                 renderItem={({item}) => {
                     return (
                         <View style={{marginVertical: 10}}>
-                            <Text style={styles.result}>{item.username}</Text>
+                            <Text style={styles.result}>
+                                {item.username}
+                                <CustomButton
+                                    text="Friend"
+                                    onPress={() => {addFriend(item._id);} /*addFriend(item._id)*/}
+                                    type="FRIEND"
+                                />
+                            </Text>
                             <Text style={styles.border}/>
                         </View>
                     )

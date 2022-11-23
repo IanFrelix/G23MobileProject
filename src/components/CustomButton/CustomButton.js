@@ -43,6 +43,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#3B71F3'
     },
 
+    container_FRIEND: {
+        flexDirection: 'row',
+        backgroundColor: '#3B71F3',
+        height: 10
+    },
+
     text: {
         fontWeight: 'bold',
         color: 'white',
