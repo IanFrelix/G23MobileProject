@@ -14,12 +14,13 @@ const SearchUserScreen = () => {
     const [input, setInput] = useState('');
     const [data, setData] = useState([]);
     const [id, setID] = useState('');
-    const [friends, setFriends] = useState([]); // just for testing
+    // const [friend, setFriends] = useState(''); // just for testing
 
     AsyncStorage.getItem('user')
     .then((value) => {
         const data = JSON.parse(value);
-        setID(data.userId);
+        setID(data._id);
+        // setFriends(data.relationships[0].id); //this works
         // setFriends(JSON.parse(data.relationships)); **EVIL STRING, INFINITE PROMISE LOOP**
     })
 
@@ -53,7 +54,6 @@ const SearchUserScreen = () => {
         .then(res => {
             if (res.success) {
                 console.log(res.message);
-                console.log()
                 // if success, res.results = 0
             }
             else {

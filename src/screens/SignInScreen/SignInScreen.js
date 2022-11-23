@@ -31,17 +31,8 @@ const SignInScreen = () => {
                 if (res.success) {
                     console.warn(res.message);
                     
-                    // store user data (this seems to work)
-                    await AsyncStorage.setItem('user', JSON.stringify({
-                        userId: res.results["_id"],
-                        firstName: res.results["firstName"],
-                        lastName: res.results["lastName"],
-                        username: res.results["username"],
-                        email: res.results["email"],
-                        isVerified: res.results["isVerified"],
-                        totalLikes: res.results["totalLikes"],
-                        relationships: JSON.stringify(res.results["relationships"])
-                    }));
+                    // store user data
+                    await AsyncStorage.setItem('user', JSON.stringify(res.results));
 
                     navigation.navigate('Home');
                 }
