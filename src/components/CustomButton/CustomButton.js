@@ -36,6 +36,12 @@ const styles = StyleSheet.create({
     },
 
     container_TERTIARY: {},
+    
+    container_SEARCH: {
+        flexDirection: 'row',
+        width: '30%',
+        backgroundColor: '#3B71F3'
+    },
 
     text: {
         fontWeight: 'bold',

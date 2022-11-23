@@ -9,14 +9,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignInScreen = () => {
     
-    const [email, setEmail] = useState(''); 
+    const [username, setUsername] = useState(''); 
     const [password, setPassword] = useState(''); 
 
     const {height} = useWindowDimensions();
     const navigation = useNavigation();
 
     const onSignInPressed = async () => {
-        var obj = {email, password};
+        var obj = {username, password};
         var js = JSON.stringify(obj);
         try {
             var url = 'https://tunetable23.herokuapp.com/users/auth';
@@ -36,6 +36,7 @@ const SignInScreen = () => {
                         userId: res.results["_id"],
                         firstName: res.results["firstName"],
                         lastName: res.results["lastName"],
+                        username: res.results["username"],
                         email: res.results["email"],
                         isVerified: res.results["isVerified"],
                         totalLikes: res.results["totalLikes"]
@@ -75,9 +76,9 @@ const SignInScreen = () => {
                 <CustomHeader />
 
                 <CustomInput 
-                    placeholder="Email" 
-                    value={email} 
-                    setValue={setEmail}
+                    placeholder="Username" 
+                    value={username} 
+                    setValue={setUsername}
                 />
 
                 <CustomInput 

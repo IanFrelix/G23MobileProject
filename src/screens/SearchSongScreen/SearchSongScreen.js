@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
     View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TextInput, FlatList 
 } from 'react-native';
@@ -8,14 +8,14 @@ import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 // import SearchFilter from '../../components/SearchFilter';
 
-const SearchUserScreen = () => {
+const SearchSongScreen = () => {
 
     const [input, setInput] = useState('');
     const [data, setData] = useState([]);
 
     const onSearch = () => {
         if (input !== '' || input !== ' ') {
-            var url = `https://tunetable23.herokuapp.com/users/search/${input}`;
+            var url = `https://tunetable23.herokuapp.com/songs/search/${input}`;
             fetch(url, {
                 method: 'GET',
                 headers: {'Content-Type':'application/json'}
@@ -39,7 +39,7 @@ const SearchUserScreen = () => {
                 <TextInput 
                     value={input}
                     onChangeText={text => setInput(text)}
-                    placeholder="Search user" 
+                    placeholder="Search song" 
                 />
                 <CustomButton
                     text="Search"
@@ -53,7 +53,7 @@ const SearchUserScreen = () => {
                 renderItem={({item}) => {
                     return (
                         <View style={{marginVertical: 10}}>
-                            <Text style={styles.result}>{item.username}</Text>
+                            <Text style={styles.result}>{item.title}</Text>
                             <Text style={styles.border}/>
                         </View>
                     )
@@ -107,4 +107,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default SearchUserScreen
+export default SearchSongScreen

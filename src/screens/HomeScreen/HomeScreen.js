@@ -12,7 +12,7 @@ const HomeScreen = () => {
     AsyncStorage.getItem('user')
     .then((value) => {
         const data = JSON.parse(value);
-        setName(data.firstName);
+        setName(data.username);
     })
     // at this point, can't render data variable (cant find variable)
 
@@ -24,8 +24,7 @@ const HomeScreen = () => {
     }
     
     const onFindSongPressed = () => {
-        // navigation.navigate('Searchsong');
-        console.warn("onFindSongPressed");  
+        navigation.navigate('Searchsong');
     }
 
     const onProfilePress = () => {
