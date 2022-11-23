@@ -7,12 +7,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const ProfileScreen = () => {
 
     const [id, setID] = useState('');
+    const [username, setUsername] = useState('');
+    const [totalLikes, setTotalLikes] = useState(0);
 
     // retrieve user id
     AsyncStorage.getItem('user')
     .then((value) => {
         const data = JSON.parse(value);
         setID(data.userId);
+        setUsername(data.username);
     })
 
     const navigation = useNavigation();
@@ -59,6 +62,21 @@ const ProfileScreen = () => {
     return (
         <ScrollView showsVerticalScrollIndicator={false} style={styles.base}>
             <View style={styles.root}>
+                <Text>
+                    {username}
+                </Text>
+                <Text>
+                    Total Likes: {totalLikes}
+                </Text>
+                <Text>
+                    Recent Song Liked:
+                </Text>
+                <Text>
+                    Favorite Genre:
+                </Text>
+                <Text>
+                    Favorite Song of All Time:
+                </Text>
                 <CustomButton
                     text="Delete Account"
                     onPress={deleteAlert} 

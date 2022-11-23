@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SignInScreen from '../screens/SignInScreen';
@@ -19,30 +19,22 @@ const Navigation = () => {
                 <Stack.Screen name="SignIn" component={SignInScreen} />
                 <Stack.Screen name="Register" component={RegisterScreen} />
                 <Stack.Screen name="Home" component={HomeScreen} />
-                <Stack.Screen name="Searchuser" options={{
-                    headerShown: true, 
-                    headerTitle: "",
-                    headerBackVisible: true,
-                    borderBottomWidth: 0,
-                    headerStyle: {backgroundColor: '#3d3d3d'}
-                    }} component={SearchUserScreen} />
-                <Stack.Screen name="Searchsong" options={{
-                    headerShown: true, 
-                    headerTitle: "",
-                    headerBackVisible: true,
-                    borderBottomWidth: 0,
-                    headerStyle: {backgroundColor: '#3d3d3d'}
-                    }} component={SearchSongScreen} />
-                <Stack.Screen name="Profile" options={{
-                    headerShown: true, 
-                    headerTitle: "",
-                    headerBackVisible: true,
-                    borderBottomWidth: 0,
-                    headerStyle: {backgroundColor: '#3d3d3d'}
-                    }} component={ProfileScreen} />
+                <Stack.Screen name="Searchuser" component={SearchUserScreen} options={styles.back} />
+                <Stack.Screen name="Searchsong" component={SearchSongScreen} options={styles.back} />
+                <Stack.Screen name="Profile" component={ProfileScreen} options={styles.back} />
             </Stack.Navigator>
         </NavigationContainer>
     )
 }
+
+const styles = StyleSheet.create({
+    back: {
+        headerShown: true, 
+        headerTitle: "",
+        headerBackVisible: true,
+        borderBottomWidth: 0,
+        headerStyle: {backgroundColor: '#3d3d3d'}
+    }
+});
 
 export default Navigation;
