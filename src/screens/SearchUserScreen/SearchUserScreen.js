@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
     View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TextInput, FlatList 
 } from 'react-native';
@@ -14,43 +14,37 @@ const SearchUserScreen = () => {
     const [data, setData] = useState([]);
 
     const onSearch = () => {
-        if (input === '' || input === ' ')
-        {
-            return;
+        if (input !== '' || input !== ' ') {
+            var url = `https://tunetable23.herokuapp.com/users/search/${input}`;
+            fetch(url, {
+                method: 'GET',
+                headers: {'Content-Type':'application/json'}
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.success) {
+                    console.log(res.message);
+                    setData(res.results);
+                }
+                else {
+                    console.warn(res);
+                }
+            })
         }
-        var url = `https://tunetable23.herokuapp.com/users/search/${input}`;
-        fetch(url, {
-            method: 'GET',
-            headers: {'Content-Type':'application/json'}
-        })
-        .then(res => res.json())
-        .then(res => {
-            if (res.success) {
-                console.warn(input);
-                setData(res.results);
-            }
-            else {
-                console.warn(res);
-            }
-        })
     }
-
-    const changeText = (text) => {
-        setInput(text);
-        onSearch();
-    }
-
-    // useEffect(() => {
-    //     setNewInput(input);
-    // }, [input])
 
     return (
         <View style={styles.base}>
             <View style={styles.search}>
                 <TextInput 
                     value={input}
-                    onChangeText={text => changeText(text)}
+                    onChangeText={text => setInput(text)}
                     placeholder="Search user" 
+                />
+                <CustomButton
+                    text="Search"
+                    onPress={onSearch}
+                    type="SEARCH"
                 />
             </View>
             <FlatList
@@ -90,12 +84,12 @@ const styles = StyleSheet.create({
     },
 
     search: {
-        padding: 20,
+        paddingLeft: 20,
         flexDirection: "row",
-        width: "95%",
         backgroundColor: "#d9dbda",
         borderRadius: 10,
-        alignItems: "center"
+        alignItems: "center",
+        justifyContent: 'space-between'
     },
 
     result: {
