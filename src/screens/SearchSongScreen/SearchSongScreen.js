@@ -53,7 +53,7 @@ const SearchSongScreen = () => {
                 renderItem={({item}) => {
                     return (
                         <View style={{marginVertical: 10}}>
-                            <Text style={styles.result}>{item.title}</Text>
+                            <Text style={styles.result}>{item.artist} - {item.title}</Text>
                             <Text style={styles.border}/>
                         </View>
                     )

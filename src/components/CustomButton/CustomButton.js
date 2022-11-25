@@ -45,20 +45,17 @@ const styles = StyleSheet.create({
 
     container_FRIEND: {
         flexDirection: 'row',
-        backgroundColor: '#3B71F3',
-        height: 10
+        backgroundColor: '#3B71F3'
     },
 
     container_UNFRIEND: {
         flexDirection: 'row',
         backgroundColor: '#F33B3B',
-        height: 10
     },
 
     container_BLOCK: {
         flexDirection: 'row',
         backgroundColor: '#24243D',
-        height: 10
     },
 
     text: {

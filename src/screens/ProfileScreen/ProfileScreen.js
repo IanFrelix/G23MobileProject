@@ -64,6 +64,10 @@ const ProfileScreen = () => {
         navigation.navigate('Friends');
     }
 
+    const onBlockedPress = () => {
+        navigation.navigate('Blocked');
+    }
+
     return (
         <ScrollView showsVerticalScrollIndicator={false} style={styles.base}>
             <View style={styles.root}>
@@ -85,6 +89,10 @@ const ProfileScreen = () => {
                 <CustomButton
                     text="Friends"
                     onPress={onFriendPress}
+                />
+                <CustomButton
+                    text="Blocked Users"
+                    onPress={onBlockedPress}
                 />
                 <CustomButton
                     text="Delete Account"

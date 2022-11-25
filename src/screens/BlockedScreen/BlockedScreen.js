@@ -6,19 +6,19 @@ import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const FriendScreen = () => {
+const BlockedScreen = () => {
 
     const [data, setData] = useState([]);
     const [id, setID] = useState('');
     // console.log(data); // this properly shows data
 
     useEffect(() => {
-        async function showFriends() {
+        async function showBlocked() {
             AsyncStorage.getItem('user')
             .then((value) => {
                 const data = JSON.parse(value);
                 setID(data._id);
-                var url = `https://tunetable23.herokuapp.com/users/${data._id}/friends`;
+                var url = `https://tunetable23.herokuapp.com/users/${data._id}/blocked`;
                 fetch(url, {
                     method: 'GET',
                     headers: {'Content-Type':'application/json'}
@@ -35,11 +35,11 @@ const FriendScreen = () => {
                 })
             })
         }
-        showFriends();
+        showBlocked();
     }, []);
 
-    const showFriends2 = async () => {
-        var url = `https://tunetable23.herokuapp.com/users/${id}/friends`;
+    const showBlocked2 = async () => {
+        var url = `https://tunetable23.herokuapp.com/users/${id}/blocked`;
         await fetch(url, {
             method: 'GET',
             headers: {'Content-Type':'application/json'}
@@ -56,8 +56,8 @@ const FriendScreen = () => {
         })
     }
 
-    const deleteFriend = async (friendId) => {
-        var url = `https://tunetable23.herokuapp.com/users/${id}/unfriend/${friendId}`;
+    const unblockUser = async (blockedId) => {
+        var url = `https://tunetable23.herokuapp.com/users/${id}/unblock/${blockedId}`;
         await fetch(url, {
             method: 'POST',
             headers: {'Content-Type':'application/json'}
@@ -66,25 +66,7 @@ const FriendScreen = () => {
         .then(res => {
             if (res.success) {
                 console.log(res.message);
-                showFriends2(); // refresh
-            }
-            else {
-                console.warn(res);
-            }
-        })
-    }
-
-    const blockUser = async (friendId) => {
-        var url = `https://tunetable23.herokuapp.com/users/${id}/block/${friendId}`;
-        await fetch(url, {
-            method: 'POST',
-            headers: {'Content-Type':'application/json'}
-        })
-        .then(res => res.json())
-        .then(res => {
-            if (res.success) {
-                console.log(res.message);
-                showFriends2(); // refresh
+                showBlocked2(); // refresh
             }
             else {
                 console.warn(res);
@@ -103,14 +85,9 @@ const FriendScreen = () => {
                             <Text style={styles.result}>
                                 {item.username}
                                 <CustomButton
-                                    text="Unfriend"
-                                    onPress={() => {deleteFriend(item.id);}}
-                                    type="UNFRIEND"
-                                />
-                                <CustomButton
-                                    text="Block"
-                                    onPress={() => {blockUser(item.id);}}
-                                    type="BLOCK"
+                                    text="Unblock"
+                                    onPress={() => {unblockUser(item.id);}}
+                                    type="FRIEND"
                                 />
                             </Text>
                             <Text style={styles.border}/>
@@ -166,4 +143,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default FriendScreen
+export default BlockedScreen
