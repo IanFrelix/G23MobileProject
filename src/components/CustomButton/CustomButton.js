@@ -49,6 +49,18 @@ const styles = StyleSheet.create({
         height: 10
     },
 
+    container_UNFRIEND: {
+        flexDirection: 'row',
+        backgroundColor: '#F33B3B',
+        height: 10
+    },
+
+    container_BLOCK: {
+        flexDirection: 'row',
+        backgroundColor: '#24243D',
+        height: 10
+    },
+
     text: {
         fontWeight: 'bold',
         color: 'white',

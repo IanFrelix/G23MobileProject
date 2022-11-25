@@ -14,8 +14,9 @@ const ProfileScreen = () => {
     AsyncStorage.getItem('user')
     .then((value) => {
         const data = JSON.parse(value);
-        setID(data.userId);
-        setUsername(data.username);
+        setID(data._id);
+        setUsername(data.username); 
+        setTotalLikes(data.totalLikes);
     })
 
     const navigation = useNavigation();
@@ -59,6 +60,10 @@ const ProfileScreen = () => {
           );
     }
 
+    const onFriendPress = () => {
+        navigation.navigate('Friends');
+    }
+
     return (
         <ScrollView showsVerticalScrollIndicator={false} style={styles.base}>
             <View style={styles.root}>
@@ -77,6 +82,10 @@ const ProfileScreen = () => {
                 <Text>
                     Favorite Song of All Time:
                 </Text>
+                <CustomButton
+                    text="Friends"
+                    onPress={onFriendPress}
+                />
                 <CustomButton
                     text="Delete Account"
                     onPress={deleteAlert} 
