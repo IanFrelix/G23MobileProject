@@ -1,51 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
     View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TextInput, FlatList 
 } from 'react-native';
-import Logo from '../../../assets/G23Images/musicnote.png';
-import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import SearchFilter from '../../components/SearchFilter';
 
-const SearchUserScreen = () => {
+const FriendScreen = () => {
 
-    const [input, setInput] = useState('');
     const [data, setData] = useState([]);
     const [id, setID] = useState('');
-    // const [friend, setFriends] = useState(''); // just for testing
+    // console.log(data); // this properly shows data
 
-    AsyncStorage.getItem('user')
-    .then((value) => {
-        const data = JSON.parse(value);
-        setID(data._id);
-        // setFriends(data.relationships[0].id); //this works
-        // setFriends(JSON.parse(data.relationships)); **EVIL STRING, INFINITE PROMISE LOOP**
-    })
-
-    const onSearch = () => {
-        if (input !== '' || input !== ' ') {
-            var url = `https://tunetable23.herokuapp.com/users/search/${input}`;
-            fetch(url, {
-                method: 'GET',
-                headers: {'Content-Type':'application/json'}
-            })
-            .then(res => res.json())
-            .then(res => {
-                if (res.success) {
-                    console.log(res.message);
-                    setData(res.results);
-                }
-                else {
-                    console.warn(res);
-                }
+    useEffect(() => {
+        async function showFriends() {
+            AsyncStorage.getItem('user')
+            .then((value) => {
+                const data = JSON.parse(value);
+                setID(data._id);
+                var url = `https://tunetable23.herokuapp.com/users/${data._id}/friends`;
+                fetch(url, {
+                    method: 'GET',
+                    headers: {'Content-Type':'application/json'}
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        console.log(res.message);
+                        setData(res.results);
+                    }
+                    else {
+                        console.warn(res);
+                    }
+                })
             })
         }
+        showFriends();
+    }, []);
+
+    const showFriends2 = async () => {
+        var url = `https://tunetable23.herokuapp.com/users/${id}/friends`;
+        await fetch(url, {
+            method: 'GET',
+            headers: {'Content-Type':'application/json'}
+        })
+        .then(res => res.json())
+        .then(res => {
+            if (res.success) {
+                console.log(res.message);
+                setData(res.results);
+            }
+            else {
+                console.warn(res);
+            }
+        })
     }
 
-    const addFriend = async (friendId) => {
-        var url = `https://tunetable23.herokuapp.com/users/${id}/addFriend/${friendId}`;
+    const deleteFriend = async (friendId) => {
+        var url = `https://tunetable23.herokuapp.com/users/${id}/unfriend/${friendId}`;
         await fetch(url, {
             method: 'POST',
             headers: {'Content-Type':'application/json'}
@@ -54,7 +66,7 @@ const SearchUserScreen = () => {
         .then(res => {
             if (res.success) {
                 console.log(res.message);
-                // if success, res.results = 0
+                showFriends2(); // refresh
             }
             else {
                 console.warn(res);
@@ -72,7 +84,7 @@ const SearchUserScreen = () => {
         .then(res => {
             if (res.success) {
                 console.log(res.message);
-                onSearch(); // refresh
+                showFriends2(); // refresh
             }
             else {
                 console.warn(res);
@@ -82,34 +94,21 @@ const SearchUserScreen = () => {
 
     return (
         <View style={styles.base}>
-            <View style={styles.search}>
-                <TextInput 
-                    value={input}
-                    onChangeText={text => setInput(text)}
-                    placeholder="Search user" 
-                />
-                <CustomButton
-                    text="Search"
-                    onPress={onSearch}
-                    type="SEARCH"
-                />
-            </View>
             <FlatList
-                data={data} 
-                keyExtractor={item => item._id}
+                data={data}
                 renderItem={({item}) => {
                     return (
                         <View style={{marginVertical: 10}}>
                             <Text style={styles.result}>
-                                {item.username}
+                                {item}
                                 <CustomButton
-                                    text="Friend"
-                                    onPress={() => {addFriend(item._id);}}
-                                    type="FRIEND"
+                                    text="Unfriend"
+                                    onPress={() => {deleteFriend(item);}}
+                                    type="UNFRIEND"
                                 />
                                 <CustomButton
                                     text="Block"
-                                    onPress={() => {blockUser(item._id);}}
+                                    onPress={() => {blockUser(item);}}
                                     type="BLOCK"
                                 />
                             </Text>
@@ -166,4 +165,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default SearchUserScreen
+export default FriendScreen
