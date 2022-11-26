@@ -36,6 +36,10 @@ const styles = StyleSheet.create({
     },
 
     container_TERTIARY: {},
+
+    container_SECONDARY: {
+        backgroundColor: '#F33B3B',
+    },
     
     container_SEARCH: {
         flexDirection: 'row',
