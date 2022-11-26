@@ -32,7 +32,7 @@ const SearchUserScreen = () => {
 
     const onSearch = () => {
         if (input !== '' || input !== ' ') {
-            var url = `https://tunetable23.herokuapp.com/users/search/${input}`;
+            var url = `https://tunetable23.herokuapp.com/users/${id}/search/${input}`;
             fetch(url, {
                 method: 'GET',
                 headers: {'Content-Type':'application/json'}
