@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, FlatList } from 'react-native';
+import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, FlatList, Alert } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -30,6 +30,20 @@ const HomeScreen = () => {
         navigation.navigate('Profile');
     }
 
+    const onSignoutPress = () => {
+        AsyncStorage.multiRemove(['user', 'token']);
+        Alert.alert(
+            "You've been signed out.",
+            "",
+            [
+                { text: "OK",
+                onPress: () => navigation.navigate('SignIn'),
+                },
+            ],
+            {cancelable: false},
+        );
+    }
+
     return (
         <ScrollView style={styles.base}>
             <View style={styles.root}>
@@ -50,6 +64,12 @@ const HomeScreen = () => {
                 <CustomButton 
                     text="Profile Page"
                     onPress={onProfilePress}
+                />
+
+                <CustomButton
+                    text="Sign Out"
+                    onPress={onSignoutPress}
+                    type="SECONDARY"
                 />
             </View>
         </ScrollView>

@@ -66,7 +66,7 @@ const ProfileScreen = () => {
               { text: "OK",
                 onPress: onDeletePressed}
             ]
-          );
+        );
     }
 
     const onFriendPress = () => {
