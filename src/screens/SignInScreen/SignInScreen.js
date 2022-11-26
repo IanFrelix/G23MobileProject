@@ -31,8 +31,11 @@ const SignInScreen = () => {
                 if (res.success) {
                     console.warn(res.message);
                     
-                    // store user data
-                    await AsyncStorage.setItem('user', JSON.stringify(res.results));
+                    // store user data & token
+                    await AsyncStorage.multiSet([
+                        ['user', JSON.stringify(res.results)],
+                        ['token', res.token]
+                    ]);
 
                     navigation.navigate('Home');
                 }

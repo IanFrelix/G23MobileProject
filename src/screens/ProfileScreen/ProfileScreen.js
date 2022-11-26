@@ -9,28 +9,37 @@ const ProfileScreen = () => {
     const [id, setID] = useState('');
     const [username, setUsername] = useState('');
     const [totalLikes, setTotalLikes] = useState(0);
+    const [token, setToken] = useState('');
 
-    // retrieve user id
-    AsyncStorage.getItem('user')
+    // retrieve user id & token
+    AsyncStorage.multiGet(['user', 'token'])
     .then((value) => {
-        const data = JSON.parse(value);
+        const data = JSON.parse(value[0][1]); // 'user'
         setID(data._id);
         setUsername(data.username); 
         setTotalLikes(data.totalLikes);
+        setToken(value[1][1]); // 'token'
     })
+
+    // //retrieve token
+    // AsyncStorage.getItem('token')
+    // .then((value) => {
+    //     setToken(value);
+    // }) 
 
     const navigation = useNavigation();
 
     const onDeletePressed = async () => {
 
         var obj = {id};
-        var js = JSON.stringify(obj);
         var url = `https://tunetable23.herokuapp.com/users/${id}/delete`;
 
         await fetch(url, {
             method: 'DELETE', 
-            body: js, 
-            headers: {'Content-Type':'application/json'}
+            headers: {
+                'authorization': `Bearer ${token}`, 
+                'Content-Type':'application/json'
+            }
         })
         .then(res => res.json())
         .then(res => {

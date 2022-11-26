@@ -10,18 +10,23 @@ const BlockedScreen = () => {
 
     const [data, setData] = useState([]);
     const [id, setID] = useState('');
-    // console.log(data); // this properly shows data
+    const [token, setToken] = useState('');
 
     useEffect(() => {
         async function showBlocked() {
-            AsyncStorage.getItem('user')
+            AsyncStorage.multiGet(['user', 'token'])
             .then((value) => {
-                const data = JSON.parse(value);
+                const data = JSON.parse(value[0][1]); // 'user'
                 setID(data._id);
+                const ogToken = value[1][1];
+                setToken(ogToken); // 'token'
                 var url = `https://tunetable23.herokuapp.com/users/${data._id}/blocked`;
                 fetch(url, {
                     method: 'GET',
-                    headers: {'Content-Type':'application/json'}
+                    headers: {
+                        'authorization': `Bearer ${ogToken}`,
+                        'Content-Type':'application/json'
+                    }
                 })
                 .then(res => res.json())
                 .then(res => {
@@ -42,7 +47,10 @@ const BlockedScreen = () => {
         var url = `https://tunetable23.herokuapp.com/users/${id}/blocked`;
         await fetch(url, {
             method: 'GET',
-            headers: {'Content-Type':'application/json'}
+            headers: {
+                'authorization': `Bearer ${token}`,
+                'Content-Type':'application/json'
+            }
         })
         .then(res => res.json())
         .then(res => {
@@ -60,7 +68,10 @@ const BlockedScreen = () => {
         var url = `https://tunetable23.herokuapp.com/users/${id}/unblock/${blockedId}`;
         await fetch(url, {
             method: 'POST',
-            headers: {'Content-Type':'application/json'}
+            headers: {
+                'authorization': `Bearer ${token}`,
+                'Content-Type':'application/json'
+            }
         })
         .then(res => res.json())
         .then(res => {

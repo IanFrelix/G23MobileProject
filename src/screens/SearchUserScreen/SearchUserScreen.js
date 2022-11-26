@@ -14,15 +14,21 @@ const SearchUserScreen = () => {
     const [input, setInput] = useState('');
     const [data, setData] = useState([]);
     const [id, setID] = useState('');
-    // const [friend, setFriends] = useState(''); // just for testing
+    const [token, setToken] = useState('');
 
-    AsyncStorage.getItem('user')
+    // retrieve user id & token
+    AsyncStorage.multiGet(['user', 'token'])
     .then((value) => {
-        const data = JSON.parse(value);
+        const data = JSON.parse(value[0][1]); // 'user'
         setID(data._id);
-        // setFriends(data.relationships[0].id); //this works
-        // setFriends(JSON.parse(data.relationships)); **EVIL STRING, INFINITE PROMISE LOOP**
+        setToken(value[1][1]); // 'token'
     })
+
+    // //retrieve token
+    // AsyncStorage.getItem('token')
+    // .then((value) => {
+    //     setToken(value);
+    // }) 
 
     const onSearch = () => {
         if (input !== '' || input !== ' ') {
@@ -48,7 +54,10 @@ const SearchUserScreen = () => {
         var url = `https://tunetable23.herokuapp.com/users/${id}/addFriend/${friendId}`;
         await fetch(url, {
             method: 'POST',
-            headers: {'Content-Type':'application/json'}
+            headers: {
+                'authorization': `Bearer ${token}`,
+                'Content-Type':'application/json'
+            }
         })
         .then(res => res.json())
         .then(res => {
@@ -66,7 +75,10 @@ const SearchUserScreen = () => {
         var url = `https://tunetable23.herokuapp.com/users/${id}/block/${friendId}`;
         await fetch(url, {
             method: 'POST',
-            headers: {'Content-Type':'application/json'}
+            headers: {
+                'authorization': `Bearer ${token}`,
+                'Content-Type':'application/json'
+            }
         })
         .then(res => res.json())
         .then(res => {

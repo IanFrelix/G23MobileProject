@@ -9,12 +9,11 @@ const HomeScreen = () => {
     const [name, setName] = useState('');
     
     // retrieve user data (works)
-    AsyncStorage.getItem('user')
+    AsyncStorage.multiGet(['user', 'token'])
     .then((value) => {
-        const data = JSON.parse(value);
+        const data = JSON.parse(value[0][1]); // 'user'
         setName(data.username);
     })
-    // at this point, can't render data variable (cant find variable)
 
     const {height} = useWindowDimensions();
     const navigation = useNavigation();
