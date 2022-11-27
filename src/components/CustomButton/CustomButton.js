@@ -62,6 +62,17 @@ const styles = StyleSheet.create({
         backgroundColor: '#24243D',
     },
 
+    container_CANCEL: {
+        padding: 5,
+        flexDirection: 'row'
+    },
+
+    container_POST: {
+        width: '30%',
+        padding: 8,
+        backgroundColor: '#3B71F3'
+    },
+
     text: {
         fontWeight: 'bold',
         color: 'white',
@@ -69,6 +80,10 @@ const styles = StyleSheet.create({
 
     text_TERTIARY: {
         color: 'gray',
+    },
+
+    text_CANCEL: {
+        color: 'black'
     }
 })
 
