@@ -6,12 +6,15 @@ import Logo from '../../../assets/G23Images/musicnote.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
+import Navigation from '../../navigation';
 // import SearchFilter from '../../components/SearchFilter';
 
 const SearchSongScreen = () => {
 
     const [input, setInput] = useState('');
     const [data, setData] = useState([]);
+
+    const navigation = useNavigation();
 
     const onSearch = () => {
         if (input !== '' || input !== ' ') {
@@ -53,7 +56,23 @@ const SearchSongScreen = () => {
                 renderItem={({item}) => {
                     return (
                         <View style={{marginVertical: 10}}>
-                            <Text style={styles.result}>{item.artist} - {item.title}</Text>
+                            <Text style={styles.result}>
+                                {item.artist} - {item.title}
+                                <CustomButton
+                                    text="Add"
+                                    onPress={() => {
+                                        navigation.navigate({
+                                            name: 'Home',
+                                            params: {
+                                                songId: item._id,
+                                                songTitle: item.title,
+                                                songArtist: item.artist
+                                            }
+                                        });
+                                    }}
+                                    type="FRIEND"
+                                />
+                            </Text>
                             <Text style={styles.border}/>
                         </View>
                     )
