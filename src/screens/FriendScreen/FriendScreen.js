@@ -14,12 +14,15 @@ const FriendScreen = () => {
 
     useEffect(() => {
         async function showFriends() {
+            // retrieve user data
             AsyncStorage.multiGet(['user', 'token'])
             .then((value) => {
                 const data = JSON.parse(value[0][1]); // 'user'
                 setID(data._id);
                 const ogToken = value[1][1];
                 setToken(ogToken); // 'token'
+                
+                // display friends list
                 var url = `https://tunetable23.herokuapp.com/users/${data._id}/friends`;
                 fetch(url, {
                     method: 'GET',
