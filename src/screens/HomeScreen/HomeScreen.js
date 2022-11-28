@@ -80,6 +80,10 @@ const HomeScreen = ({route}) => {
         navigation.navigate('Profile');
     }
 
+    const onBoardPressed = () => {
+        navigation.navigate('Board');
+    }
+
     const onSignoutPress = () => {
         AsyncStorage.multiRemove(['user', 'token']);
         Alert.alert(
@@ -176,6 +180,11 @@ const HomeScreen = ({route}) => {
                 <CustomButton
                     text="Find Friends"
                     onPress={onFindFriendPressed}
+                />
+
+                <CustomButton
+                    text="Leaderboard"
+                    onPress={onBoardPressed}
                 />
 
                 {
