@@ -119,8 +119,11 @@ const HomeScreen = ({route}) => {
                     "",
                     [
                         { text: "OK",
-                        onPress: () => setVisible(!visible),
-                        },
+                        onPress: () => {
+                            setVisible(!visible);
+                            setMessage('');
+                            setSong('');
+                        }},
                     ],
                     {cancelable: false},
                 );
@@ -187,10 +190,7 @@ const HomeScreen = ({route}) => {
                     onPress={onBoardPressed}
                 />
 
-                {
-                    /* "show off your music taste!" 
-                    when pressed, creates input popup */
-                }
+                {/* post creation */}
                 <Modal
                     animationType="slide"
                     transparent={true}
@@ -228,6 +228,7 @@ const HomeScreen = ({route}) => {
                         </View>
                     </View>
                 </Modal>
+
                 <CustomButton
                     text="Share what you're listening to!"
                     onPress={() => setVisible(true)}
