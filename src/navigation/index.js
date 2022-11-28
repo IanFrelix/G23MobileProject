@@ -10,6 +10,7 @@ import SearchSongScreen from '../screens/SearchSongScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import FriendScreen from '../screens/FriendScreen';
 import BlockedScreen from '../screens/BlockedScreen';
+import LeaderboardScreen from '../screens/LeaderboardScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,7 @@ const Navigation = () => {
                 <Stack.Screen name="Searchuser" component={SearchUserScreen} options={styles.back} />
                 <Stack.Screen name="Searchsong" component={SearchSongScreen} options={styles.back} />
                 <Stack.Screen name="Profile" component={ProfileScreen} options={styles.back} />
+                <Stack.Screen name="Board" component={LeaderboardScreen} options={styles.back} />
                 <Stack.Screen name="Friends" component={FriendScreen} options={styles.back} />
                 <Stack.Screen name="Blocked" component={BlockedScreen} options={styles.back} />
             </Stack.Navigator>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { 
     View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, FlatList, Alert, Modal, TextInput
 } from 'react-native';
@@ -12,7 +12,9 @@ const HomeScreen = ({route}) => {
     const [name, setName] = useState('');
     const [id, setID] = useState('');
     const [token, setToken] = useState('');
-    const [visible, setVisible] = useState(false);
+    const [visible, setVisible] = useState(false); // post modal
+    const [data, setData] = useState([]); // friends' posts
+    const [likedPosts, setLiked] = useState([]); // liked posts
 
     // post body:
     const [message, setMessage] = useState(''); // message
@@ -25,21 +27,45 @@ const HomeScreen = ({route}) => {
 
     useEffect(() => {
         if (isFocused) {
+            // triggers when you add song post
             if (route.params?.songId) {
                 setSong(route.params?.songId);
                 setVisible(true);
             }
+
+            // show friends' posts when screen opens
+            async function showPosts() {
+                // retrieve user data
+                AsyncStorage.multiGet(['user', 'token'])
+                .then((value) => {
+                    const data = JSON.parse(value[0][1]); // 'user'
+                    setName(data.username);
+                    setID(data._id);
+                    setLiked(data.likedPosts);
+                    setToken(value[1][1]); // 'token'
+                    console.log("INTIAL LIKED POSTS: " + data.likedPosts);
+                    console.log("INTIAL **SET** LIKED POSTS: " + likedPosts);
+
+                    // display friends' posts
+                    var url = `https://tunetable23.herokuapp.com/posts/${data._id}/friends`;
+                    fetch(url, {
+                        method: 'GET',
+                        headers: {'Content-Type':'application/json'}
+                    })
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.success) {
+                            setData(res.results);
+                        }
+                        else {
+                            console.warn(res);
+                        }
+                    })
+                })
+            }
+            showPosts();
         }
     }, [route.params?.songId]);
-    
-    // retrieve user data (works)
-    AsyncStorage.multiGet(['user', 'token'])
-    .then((value) => {
-        const data = JSON.parse(value[0][1]); // 'user'
-        setName(data.username);
-        setID(data._id);
-        setToken(value[1][1]); // 'token'
-    })
 
     const onFindFriendPressed = () => {
         navigation.navigate('Searchuser');
@@ -52,6 +78,10 @@ const HomeScreen = ({route}) => {
 
     const onProfilePress = () => {
         navigation.navigate('Profile');
+    }
+
+    const onBoardPressed = () => {
+        navigation.navigate('Board');
     }
 
     const onSignoutPress = () => {
@@ -84,7 +114,55 @@ const HomeScreen = ({route}) => {
         .then(res => {
             if (res.success) {
                 console.log(res.message);
-                setVisible(!visible);
+                Alert.alert(
+                    "Post has been created!",
+                    "",
+                    [
+                        { text: "OK",
+                        onPress: () => setVisible(!visible),
+                        },
+                    ],
+                    {cancelable: false},
+                );
+            }
+            else {
+                console.warn(res);
+            }
+        })
+    }
+    // JUST FOR REFERENCE:
+
+    propsAreEqual = (prev, next) => {
+        return prev.isLiked === next.isLiked;
+    }
+
+    const Row = memo(({ title, artist, isLiked, onPress }) => {
+        return (
+          <React.Fragment>
+            <Text style={styles.result}>
+              <Text>{artist} - {title}</Text>
+              <CustomButton
+                type={isLiked ? "UNFRIEND" : "BLOCK"}
+                text={isLiked ? "Like" : "Unlike"}
+                onPress={() => onPress(title)}
+              />
+            </Text>
+            <Text style={styles.border}/>
+          </React.Fragment>
+        );
+    }, propsAreEqual);
+
+    const likePost = async (postId, isLiked) => {
+        const likeToggle = isLiked ? 'like' : 'unlike';
+        var url =  `https://tunetable23.herokuapp.com/users/${id}/${likeToggle}/${postId}`
+        await fetch(url, {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'}
+        })
+        .then(res => res.json())
+        .then(res => {
+            if (res.success) {
+                console.log(res.message + " // " + likedPosts);
             }
             else {
                 console.warn(res);
@@ -93,7 +171,7 @@ const HomeScreen = ({route}) => {
     }
 
     return (
-        <ScrollView style={styles.base}>
+        <View style={styles.base}>
             <View style={styles.root}>
                 <Text>
                     Welcome home, {name}!
@@ -104,14 +182,14 @@ const HomeScreen = ({route}) => {
                     onPress={onFindFriendPressed}
                 />
 
-                {/* <CustomButton
-                    text="Find Songs"
-                    onPress={onFindSongPressed}
-                /> */}
+                <CustomButton
+                    text="Leaderboard"
+                    onPress={onBoardPressed}
+                />
 
                 {
                     /* "show off your music taste!" 
-                        when pressed, creates input popup */
+                    when pressed, creates input popup */
                 }
                 <Modal
                     animationType="slide"
@@ -155,8 +233,6 @@ const HomeScreen = ({route}) => {
                     onPress={() => setVisible(true)}
                 />
 
-                {/* daily songs list */}
-
                 <CustomButton 
                     text="Profile Page"
                     onPress={onProfilePress}
@@ -167,8 +243,42 @@ const HomeScreen = ({route}) => {
                     onPress={onSignoutPress}
                     type="SECONDARY"
                 />
+
+                {/* daily songs list */}
+                <Text style={styles.text}>Daily Songs</Text>
+                <FlatList
+                    extraData={likedPosts}
+                    data={data}
+                    keyExtractor={item => item._id}
+                    renderItem={({item}) => {
+                        return (
+                            <View style={{marginVertical: 10}}>
+                                <Text style={styles.result}>
+                                    <Row
+                                        title={item.song["title"]}
+                                        artist={item.song["artist"]}
+                                        // like or unlike depending on if it's already in likedPosts
+                                        isLiked={likedPosts.includes(item._id)}
+                                        onPress={() => {
+                                            setLiked((likedItems) => {
+                                                let isLiked = likedItems.includes(item._id);
+                                                if (isLiked) {
+                                                    likePost(item._id, isLiked);
+                                                    return likedItems.filter((title) => title !== item._id);
+                                                }
+                                                likePost(item._id, isLiked);
+                                                return [item._id, ...likedItems];
+                                            });
+                                        }}
+                                    />
+                                </Text>
+                                <Text style={styles.border}/>
+                            </View>
+                        )
+                    }
+                }/>
             </View>
-        </ScrollView>
+        </View>
     )
 }
 
@@ -219,6 +329,26 @@ const styles = StyleSheet.create({
         height: 50,
         width: "100%",
         backgroundColor: "#E6E6E6"
+    },
+
+    result: {
+        fontSize: 14,
+        fontWeight: "bold",
+        color: "white",
+        marginLeft: 10
+    },
+
+    border: {
+        borderColor: "gray",
+        borderWidth: 1,
+        height: 1,
+        marginTop: 5
+    },
+    
+    text: {
+        fontSize: 14,
+        fontWeight: "bold",
+        color: "white",
     }
 });
 
