@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, Alert }
 import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SvgUri } from 'react-native-svg';
 
 const ProfileScreen = () => {
 
@@ -10,6 +11,7 @@ const ProfileScreen = () => {
     const [username, setUsername] = useState('');
     const [totalLikes, setTotalLikes] = useState(0);
     const [token, setToken] = useState('');
+    const [url, setUrl] = useState("");
 
     // retrieve user id & token
     AsyncStorage.multiGet(['user', 'token'])
@@ -19,6 +21,7 @@ const ProfileScreen = () => {
         setUsername(data.username); 
         setTotalLikes(data.totalLikes);
         setToken(value[1][1]); // 'token'
+        setUrl("https://avatars.dicebear.com/api/open-peeps/" + data.username + ".svg?r=50");
     })
 
     // //retrieve token
@@ -27,6 +30,7 @@ const ProfileScreen = () => {
     //     setToken(value);
     // }) 
 
+    const {height} = useWindowDimensions();
     const navigation = useNavigation();
 
     const onDeletePressed = async () => {
@@ -69,6 +73,33 @@ const ProfileScreen = () => {
         );
     }
 
+    const sendReset = async () => {
+        var url = `https://tunetable23.herokuapp.com/users/${id}/sendPasswordReset`;
+
+        await fetch(url, {
+            method: 'POST', 
+            headers: {'Content-Type':'application/json'}
+        })
+        .then(res => res.json())
+        .then(res => {
+            if (res.success) {
+                Alert.alert(
+                    `${res.message}`,
+                    "",
+                    [
+                        { text: "OK",
+                        onPress: () => navigation.navigate('SignIn'),
+                        },
+                    ],
+                    {cancelable: false},
+                );
+            }
+            else {
+                // console.warn(res.success);
+            }
+        })
+    }
+
     const onFriendPress = () => {
         navigation.navigate('Friends');
     }
@@ -84,21 +115,21 @@ const ProfileScreen = () => {
     return (
         <ScrollView showsVerticalScrollIndicator={false} style={styles.base}>
             <View style={styles.root}>
-                <Text>
-                    {username}
-                </Text>
-                <Text>
-                    Total Likes: {totalLikes}
-                </Text>
-                <Text>
-                    Recent Song Liked:
-                </Text>
-                <Text>
-                    Favorite Genre:
-                </Text>
-                <Text>
-                    Favorite Song of All Time:
-                </Text>
+                <SvgUri
+                    uri={url}
+                    style={[styles.logo, {height: height * 0.3}]} 
+                    resizeMode="contain"
+                />
+                <View style={[styles.result, {marginVertical: 10}]}>
+                    <Text style={[styles.result, {fontSize: 24, color: 'white'}]}>
+                        {username}
+                    </Text>
+                    
+                    <Text style={[styles.result, {color: 'white'}]}>
+                        Total Likes: {totalLikes}
+                    </Text>
+                    
+                </View>
                 <CustomButton
                     text="Friends"
                     onPress={onFriendPress}
@@ -112,8 +143,13 @@ const ProfileScreen = () => {
                     onPress={onBlockedPress}
                 />
                 <CustomButton
+                    text="Change Password"
+                    onPress={sendReset}
+                />
+                <CustomButton
                     text="Delete Account"
-                    onPress={deleteAlert} 
+                    onPress={deleteAlert}
+                    type="SECONDARY"
                 />
             </View>
         </ScrollView>
@@ -135,10 +171,17 @@ const styles = StyleSheet.create({
 
     logo: {
         width: '95%',
-        maxWidth: 500,
-        maxHeight: 100,
-
+        maxWidth: 150,
+        maxHeight: 150
     },
+
+    result: {
+        flexDirection: 'column',
+        fontSize: 14,
+        fontWeight: "bold",
+        color: "white",
+        alignItems: "center"
+    }
 });
 
 export default ProfileScreen

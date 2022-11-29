@@ -1,6 +1,7 @@
 import React, { useState, useEffect, memo } from 'react';
 import { 
-    View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, FlatList, Alert, Modal, TextInput
+    View, Text, Image, StyleSheet, useWindowDimensions, 
+    ScrollView, FlatList, Alert, Modal, TextInput, Linking
 } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
@@ -15,6 +16,7 @@ const HomeScreen = ({route}) => {
     const [visible, setVisible] = useState(false); // post modal
     const [data, setData] = useState([]); // friends' posts
     const [likedPosts, setLiked] = useState([]); // liked posts
+    const [error, setError] = useState('');
 
     // post body:
     const [message, setMessage] = useState(''); // message
@@ -43,8 +45,10 @@ const HomeScreen = ({route}) => {
                     setID(data._id);
                     setLiked(data.likedPosts);
                     setToken(value[1][1]); // 'token'
-                    console.log("INTIAL LIKED POSTS: " + data.likedPosts);
-                    console.log("INTIAL **SET** LIKED POSTS: " + likedPosts);
+
+                    // this shit's confusing tbh:
+                    // console.log("INTIAL LIKED POSTS: " + data.likedPosts);
+                    // console.log("INTIAL **SET** LIKED POSTS: " + likedPosts);
 
                     // display friends' posts
                     var url = `https://tunetable23.herokuapp.com/posts/${data._id}/friends`;
@@ -55,7 +59,12 @@ const HomeScreen = ({route}) => {
                     .then(res => res.json())
                     .then(res => {
                         if (res.success) {
-                            setData(res.results);
+                            console.log(res.message);
+                            if ((res.results).length === 0) {
+                                setError(res.message);
+                            } else {
+                                setData(res.results);
+                            }
                         }
                         else {
                             console.warn(res);
@@ -139,24 +148,39 @@ const HomeScreen = ({route}) => {
         return prev.isLiked === next.isLiked;
     }
 
-    const Row = memo(({ title, artist, isLiked, onPress }) => {
+    const Row = memo(({ title, artist, creator, message, time, link, isLiked, onPress }) => {
         return (
-          <React.Fragment>
-            <Text style={styles.result}>
-              <Text>{artist} - {title}</Text>
-              <CustomButton
-                type={isLiked ? "UNFRIEND" : "BLOCK"}
-                text={isLiked ? "Like" : "Unlike"}
-                onPress={() => onPress(title)}
-              />
-            </Text>
-            <Text style={styles.border}/>
-          </React.Fragment>
+            <View style={styles.result}>
+                <View style={{width: '56%'}}>
+                    <View>
+                        <Text style={styles.result2}>"{message}" ~ ({creator})</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.result}>{artist} - {title}</Text>
+                    </View>
+                    <Text style={styles.result3}>{time}</Text>
+                </View>
+                <View style={{width: '22%'}}>
+                    <CustomButton
+                        text="Spotify"
+                        type="SPOTIFY"
+                        onPress={() => {Linking.openURL(link)}}
+                    />
+                </View>
+                <View style={{width: '22%', alignItems: 'center'}}>
+                    <CustomButton
+                        text={isLiked ? "Unlike" : "Like"}
+                        type={isLiked ? "UNLIKE" : "LIKE"}
+                        onPress={() => {onPress(title)}}
+                    />
+                </View>
+            </View>
         );
     }, propsAreEqual);
 
     const likePost = async (postId, isLiked) => {
-        const likeToggle = isLiked ? 'like' : 'unlike';
+        // likes if NOT liked, unlikes if liked
+        const likeToggle = isLiked ? 'unlike' : 'like';
         var url =  `https://tunetable23.herokuapp.com/users/${id}/${likeToggle}/${postId}`
         await fetch(url, {
             method: 'POST',
@@ -165,7 +189,7 @@ const HomeScreen = ({route}) => {
         .then(res => res.json())
         .then(res => {
             if (res.success) {
-                console.log(res.message + " // " + likedPosts);
+                console.log(res.message);
             }
             else {
                 console.warn(res);
@@ -247,27 +271,34 @@ const HomeScreen = ({route}) => {
 
                 {/* daily songs list */}
                 <Text style={styles.text}>Daily Songs</Text>
+                <Text style={styles.error}>{error}</Text>
                 <FlatList
                     extraData={likedPosts}
                     data={data}
                     keyExtractor={item => item._id}
                     renderItem={({item}) => {
                         return (
-                            <View style={{marginVertical: 10}}>
+                            <View style={{marginVertical: 5}}>
                                 <Text style={styles.result}>
                                     <Row
                                         title={item.song["title"]}
                                         artist={item.song["artist"]}
+                                        creator={item.creator["username"]}
+                                        message={item.message}
+                                        time={item.updatedAt}
+                                        link={item.song["url"]}
                                         // like or unlike depending on if it's already in likedPosts
                                         isLiked={likedPosts.includes(item._id)}
                                         onPress={() => {
                                             setLiked((likedItems) => {
-                                                let isLiked = likedItems.includes(item._id);
+                                                // TRUE if post was already liked by user
+                                                let isLiked = likedPosts.includes(item._id);
+                                                likePost(item._id, isLiked);
+                                                // console.log(isLiked);
                                                 if (isLiked) {
-                                                    likePost(item._id, isLiked);
                                                     return likedItems.filter((title) => title !== item._id);
                                                 }
-                                                likePost(item._id, isLiked);
+                                                // what, does this ADD to likedItems regardless if it's liked or not???
                                                 return [item._id, ...likedItems];
                                             });
                                         }}
@@ -291,6 +322,7 @@ const styles = StyleSheet.create({
     },
 
     root: {
+        flex: 1,
         alignItems: 'center',
         padding: 20,
         backgroundColor: '#3d3d3d'
@@ -333,10 +365,31 @@ const styles = StyleSheet.create({
     },
 
     result: {
+        flexDirection: 'row',
         fontSize: 14,
         fontWeight: "bold",
+        color: "white"
+    },
+
+    result2: {
+        fontSize: 12,
+        fontStyle: "italic",
+        color: "white"
+    },
+
+    result3: {
+        fontSize: 10,
+        fontStyle: "italic",
+        color: "lightgray"
+    },
+
+    error: {
+        flex: 1,
+        fontSize: 30,
+        fontWeight: "bold",
         color: "white",
-        marginLeft: 10
+        alignItems: "center",
+        justifyContent: "center",
     },
 
     border: {
@@ -347,9 +400,11 @@ const styles = StyleSheet.create({
     },
     
     text: {
-        fontSize: 14,
+        paddingVertical: 10,
+        fontSize: 20,
         fontWeight: "bold",
-        color: "white",
+        color: "white"
+
     }
 });
 
