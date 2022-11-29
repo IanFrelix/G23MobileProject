@@ -73,6 +73,10 @@ const ProfileScreen = () => {
         navigation.navigate('Friends');
     }
 
+    const onPostPress = () => {
+        navigation.navigate('Posts');
+    }
+
     const onBlockedPress = () => {
         navigation.navigate('Blocked');
     }
@@ -98,6 +102,10 @@ const ProfileScreen = () => {
                 <CustomButton
                     text="Friends"
                     onPress={onFriendPress}
+                />
+                <CustomButton
+                    text="Posts"
+                    onPress={onPostPress}
                 />
                 <CustomButton
                     text="Blocked Users"
