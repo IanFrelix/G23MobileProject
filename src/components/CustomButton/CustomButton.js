@@ -54,12 +54,27 @@ const styles = StyleSheet.create({
 
     container_UNFRIEND: {
         flexDirection: 'row',
-        backgroundColor: '#F33B3B',
+        backgroundColor: '#F33B3B'
     },
 
     container_BLOCK: {
         flexDirection: 'row',
         backgroundColor: '#24243D',
+    },
+    
+    container_SPOTIFY: {
+        flexDirection: 'row',
+        backgroundColor: '#1ED760',
+    },
+
+    container_LIKE: {
+        flexDirection: 'row',
+        backgroundColor: '#DB7093'
+    },
+
+    container_UNLIKE: {
+        flexDirection: 'row',
+        backgroundColor: '#FF69B4'
     },
 
     container_CANCEL: {
@@ -83,6 +98,10 @@ const styles = StyleSheet.create({
     },
 
     text_CANCEL: {
+        color: 'black'
+    },
+
+    text_SPOTIFY: {
         color: 'black'
     }
 })

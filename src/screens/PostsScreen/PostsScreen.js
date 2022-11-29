@@ -81,31 +81,47 @@ const PostsScreen = () => {
 
     return (
         <View style={styles.base}>
-            <FlatList
-                data={data}
-                keyExtractor={item => item._id}
-                renderItem={({item}) => {
-                    return (
+            <View style={styles.root}>
+                <FlatList
+                    data={data}
+                    keyExtractor={item => item._id}
+                    renderItem={({item}) => {
+                        return (
                             <View style={{marginVertical: 10}}>
                                 <Text style={styles.result}>
-                                    {item.song["artist"]} - {item.song["title"]}
+                                    <View style={styles.result}>
+                                        <View style={{width: '56%'}}>
+                                            <View>
+                                                <Text style={styles.result}>{item.song["artist"]} - {item.song["title"]}</Text>
+                                            </View>
+                                            <View>
+                                                <Text style={styles.result2}>"{item.message}"</Text>
+                                                <Text style={styles.result}>Likes: {item.likes}</Text>
+                                            </View>
+                                            <Text style={styles.result3}>{item.updatedAt}</Text>
+                                        </View>
+                                        <View style={{width: '22%'}}>
+                                            <CustomButton
+                                                text="Spotify"
+                                                type="SPOTIFY"
+                                                onPress={() => {Linking.openURL(item.song["url"])}}
+                                            />
+                                        </View>
+                                        <View style={{width: '22%', alignItems: 'center'}}>
+                                            <CustomButton
+                                                text="Delete"
+                                                onPress={() => {deletePost(item._id)}}
+                                                type="UNFRIEND"
+                                            />
+                                        </View>
+                                    </View>
                                 </Text>
-                                <Text style={styles.result2}>
-                                    "{item.message}"
-                                </Text>
-                                <Text style={styles.result} >
-                                    Likes: {item.likes}
-                                </Text>
-                                <CustomButton
-                                    text="Delete"
-                                    onPress={() => {deletePost(item._id);}}
-                                    type="UNFRIEND"
-                                />
                                 <Text style={styles.border}/>
                             </View>
-                    )
-                }
-            }/>
+                        )
+                    }
+                }/>
+            </View>
         </View>
     )
 }
@@ -118,6 +134,7 @@ const styles = StyleSheet.create({
     },
 
     root: {
+        flex: 1,
         alignItems: 'center',
         padding: 20,
         backgroundColor: '#3d3d3d'
@@ -140,17 +157,22 @@ const styles = StyleSheet.create({
     },
 
     result: {
+        flexDirection: 'row',
         fontSize: 14,
         fontWeight: "bold",
-        color: "white",
-        marginLeft: 10
+        color: "white"
     },
 
     result2: {
         fontSize: 12,
         fontStyle: "italic",
-        color: "white",
-        marginLeft: 10
+        color: "white"
+    },
+
+    result3: {
+        fontSize: 10,
+        fontStyle: "italic",
+        color: "lightgray"
     },
 
     border: {

@@ -130,6 +130,13 @@ const styles = StyleSheet.create({
         marginLeft: 10
     },
 
+    result3: {
+        fontSize: 10,
+        fontStyle: "italic",
+        color: "lightgray",
+        marginLeft: 10
+    },
+
     border: {
         borderColor: "gray",
         borderWidth: 1,

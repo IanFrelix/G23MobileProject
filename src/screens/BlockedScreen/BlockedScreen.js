@@ -11,6 +11,7 @@ const BlockedScreen = () => {
     const [data, setData] = useState([]);
     const [id, setID] = useState('');
     const [token, setToken] = useState('');
+    const [error, setError] = useState('');
 
     useEffect(() => {
         async function showBlocked() {
@@ -32,7 +33,11 @@ const BlockedScreen = () => {
                 .then(res => {
                     if (res.success) {
                         console.log(res.message);
-                        setData(res.results);
+                        if ((res.results).length === 0) {
+                            setError(res.message);
+                        } else {
+                            setData(res.results);
+                        }
                     }
                     else {
                         console.warn(res);
@@ -56,7 +61,11 @@ const BlockedScreen = () => {
         .then(res => {
             if (res.success) {
                 console.log(res.message);
-                setData(res.results);
+                if ((res.results).length === 0) {
+                    setError(res.message);
+                } else {
+                    setData(res.results);
+                }
             }
             else {
                 console.warn(res);
@@ -85,8 +94,16 @@ const BlockedScreen = () => {
         })
     }
 
+    const Error = () => {
+        if (error === '') {
+            return <Text></Text>;
+        }
+        return <Text style={styles.error}>{error}</Text>
+    }
+
     return (
         <View style={styles.base}>
+            <Error/>
             <FlatList
                 data={data}
                 keyExtractor={item => item.id}
@@ -94,7 +111,7 @@ const BlockedScreen = () => {
                     return (
                         <View style={{marginVertical: 10}}>
                             <Text style={styles.result}>
-                                {item.username}
+                                {item.username} 
                                 <CustomButton
                                     text="Unblock"
                                     onPress={() => {unblockUser(item.id);}}
@@ -144,6 +161,15 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "white",
         marginLeft: 10
+    },
+
+    error: {
+        flex: 1,
+        fontSize: 30,
+        fontWeight: "bold",
+        color: "white",
+        alignItems: "center",
+        justifyContent: "center",
     },
 
     border: {
