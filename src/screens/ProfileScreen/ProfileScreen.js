@@ -113,7 +113,7 @@ const ProfileScreen = () => {
     }
 
     return (
-        <ScrollView showsVerticalScrollIndicator={false} style={styles.base}>
+        <View style={styles.base}>
             <View style={styles.root}>
                 <SvgUri
                     uri={url}
@@ -152,7 +152,7 @@ const ProfileScreen = () => {
                     type="SECONDARY"
                 />
             </View>
-        </ScrollView>
+        </View>
     )
 }
 
@@ -160,13 +160,13 @@ const styles = StyleSheet.create({
 
     base: {
         flex: 1,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616'
     },
 
     root: {
         alignItems: 'center',
         padding: 20,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616'
     },
 
     logo: {

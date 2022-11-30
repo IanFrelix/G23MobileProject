@@ -29,8 +29,6 @@ const SignInScreen = () => {
             .then(res => res.json())
             .then(async res => {
                 if (res.success) {
-                    console.warn(res.message);
-                    
                     // store user data & token
                     await AsyncStorage.multiSet([
                         ['user', JSON.stringify(res.results)],
@@ -59,14 +57,13 @@ const SignInScreen = () => {
     }
 
     return (
-        <ScrollView showsVerticalScrollIndicator={false} style={styles.base}>
+        <View style={styles.base}>
             <View style={styles.root}>
-                <Image 
-                    source={Logo} 
-                    style={[styles.logo, {height: height * 0.3}]} 
-                    resizeMode="contain"
+                <Image
+                    source={{uri: 'https://cdn.discordapp.com/attachments/251038634873061376/1047337117249974302/table.gif'}}
+                    style={[styles.logo, {height: height * 0.5}]}
+                    resizeMode='cover'
                 />
-
                 <CustomHeader />
 
                 <CustomInput 
@@ -87,11 +84,11 @@ const SignInScreen = () => {
                     onPress={onSignInPressed} 
                 />
 
-                <CustomButton 
+                {/* <CustomButton 
                     text="Forgot password?" 
                     onPress={onForgotPasswordPressed} 
                     type="TERTIARY" 
-                />
+                /> */}
 
                 <CustomButton 
                     text="Don't have an account? Register here!" 
@@ -99,7 +96,7 @@ const SignInScreen = () => {
                     type="TERTIARY" 
                 />
             </View>
-        </ScrollView>
+        </View>
     );
 };
 
@@ -107,19 +104,23 @@ const styles = StyleSheet.create({
 
     base: {
         flex: 1,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616',
+        justifyContent: 'flex-end'
     },
 
     root: {
-        alignItems: 'center',
+        flex: 1,
         padding: 20
     },
 
     logo: {
-        width: '95%',
-        maxWidth: 500,
-        maxHeight: 100,
-
+        borderWidth: 10,
+        borderColor: '#7A431D',
+        padding: 0,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column'
     },
 });
 

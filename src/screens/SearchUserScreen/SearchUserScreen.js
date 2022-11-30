@@ -46,6 +46,7 @@ const SearchUserScreen = () => {
                         setError(res.message);
                         setData('');
                     } else {
+                        setError('');
                         setData(res.results);
                     }
                 }
@@ -107,17 +108,21 @@ const SearchUserScreen = () => {
 
     return (
         <View style={styles.base}>
-            <View style={styles.search}>
-                <TextInput 
-                    value={input}
-                    onChangeText={text => setInput(text)}
-                    placeholder="Search user" 
-                />
-                <CustomButton
-                    text="Search"
-                    onPress={onSearch}
-                    type="SEARCH"
-                />
+            <View style={{flexDirection: 'row'}}>
+                <View style={[styles.search, {width: '80%'}]}>
+                    <TextInput 
+                        value={input}
+                        onChangeText={text => setInput(text)}
+                        placeholder="Search user" 
+                    />
+                </View>
+                <View style={{width: '70%'}}>
+                    <CustomButton
+                        text="Search"
+                        onPress={onSearch}
+                        type="SEARCH"
+                    />
+                </View>
             </View>
             <Error/>
             <FlatList
@@ -142,14 +147,14 @@ const SearchUserScreen = () => {
                                     <View style={{width: '23%'}}>
                                         <CustomButton
                                             text="Friend"
-                                            onPress={() => {addFriend(item.id);}}
-                                            type="FRIEND"
+                                            onPress={() => {addFriend(item._id);}}
+                                            type="ADD"
                                         />
                                     </View>
                                     <View style={{width: '23%'}}>
                                         <CustomButton
                                             text="Block"
-                                            onPress={() => {blockUser(item.id);}}
+                                            onPress={() => {blockUser(item._id);}}
                                             type="BLOCK"
                                         />
                                     </View>
@@ -167,14 +172,14 @@ const SearchUserScreen = () => {
 const styles = StyleSheet.create({
     base: {
         flex: 1,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616'
     },
 
     root: {
         flex: 1,
         alignItems: 'center',
         padding: 20,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616'
     },
 
     logo: {

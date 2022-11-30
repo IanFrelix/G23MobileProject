@@ -3,6 +3,7 @@ import { View, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-
 import Logo from '../../../assets/G23Images/musicnote.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
+import CustomHeader from '../../components/CustomHeader';
 import { useNavigation } from '@react-navigation/native';
 
 const RegisterScreen = () => {
@@ -46,11 +47,16 @@ const RegisterScreen = () => {
     }
 
     return (
-        <ScrollView showsVerticalScrollIndicator={false} style={styles.base}>
+        <View style={styles.base}>
             <View style={styles.root}>
-                <Image source={Logo} 
-                style={[styles.logo, {height: height * 0.3}]} 
-                resizeMode="contain"/>
+
+                <Image
+                    source={{uri: 'https://cdn.discordapp.com/attachments/251038634873061376/1047342960498442362/table2.gif'}}
+                    style={[styles.logo, {height: height * 0.3}]}
+                    resizeMode='cover'
+                />
+
+                <CustomHeader />
 
                 <CustomInput 
                 placeholder="First Name" 
@@ -94,7 +100,7 @@ const RegisterScreen = () => {
                     type="TERTIARY" 
                 />
             </View>
-        </ScrollView>
+        </View>
     );
 };
 
@@ -102,20 +108,25 @@ const styles = StyleSheet.create({
 
     base: {
         flex: 1,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616',
+        justifyContent: 'flex-end',
     },
 
     root: {
-        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'flex-end',
         padding: 20,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616'
     },
 
     logo: {
-        width: '95%',
-        maxWidth: 500,
-        maxHeight: 100,
-
+        borderWidth: 10,
+        borderColor: '#7A431D',
+        padding: 0,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'fle',
+        flexDirection: 'column'
     },
 });
 

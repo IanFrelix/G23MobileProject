@@ -1,7 +1,8 @@
 import React, { useState, useEffect, memo } from 'react';
 import { 
     View, Text, Image, StyleSheet, useWindowDimensions, 
-    ScrollView, FlatList, Alert, Modal, TextInput, Linking
+    ScrollView, FlatList, Alert, Modal, TextInput, Linking,
+    Pressable
 } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
@@ -54,13 +55,16 @@ const HomeScreen = ({route}) => {
                     var url = `https://tunetable23.herokuapp.com/posts/${data._id}/friends`;
                     fetch(url, {
                         method: 'GET',
-                        headers: {'Content-Type':'application/json'}
+                        headers: {
+                            'authorization': `Bearer ${value[1][1]}`,
+                            'Content-Type':'application/json'
+                        }
                     })
                     .then(res => res.json())
                     .then(res => {
                         if (res.success) {
                             console.log(res.message);
-                            if ((res.results).length === 0) {
+                            if (!(res.results).length) {
                                 setError(res.message);
                             } else {
                                 setData(res.results);
@@ -95,16 +99,7 @@ const HomeScreen = ({route}) => {
 
     const onSignoutPress = () => {
         AsyncStorage.multiRemove(['user', 'token']);
-        Alert.alert(
-            "You've been signed out.",
-            "",
-            [
-                { text: "OK",
-                onPress: () => navigation.navigate('SignIn'),
-                },
-            ],
-            {cancelable: false},
-        );
+        navigation.navigate('SignIn')
     }
 
     const onCreatePostPressed = () => {
@@ -123,19 +118,9 @@ const HomeScreen = ({route}) => {
         .then(res => {
             if (res.success) {
                 console.log(res.message);
-                Alert.alert(
-                    "Post has been created!",
-                    "",
-                    [
-                        { text: "OK",
-                        onPress: () => {
-                            setVisible(!visible);
-                            setMessage('');
-                            setSong('');
-                        }},
-                    ],
-                    {cancelable: false},
-                );
+                setVisible(!visible);
+                setMessage('');
+                setSong('');
             }
             else {
                 console.warn(res);
@@ -144,35 +129,44 @@ const HomeScreen = ({route}) => {
     }
     // JUST FOR REFERENCE:
 
-    propsAreEqual = (prev, next) => {
+    const propsAreEqual = (prev, next) => {
         return prev.isLiked === next.isLiked;
     }
 
     const Row = memo(({ title, artist, creator, message, time, link, isLiked, onPress }) => {
         return (
-            <View style={styles.result}>
-                <View style={{width: '56%'}}>
-                    <View>
-                        <Text style={styles.result2}>"{message}" ~ ({creator})</Text>
-                    </View>
+            <View style={[styles.result, {backgroundColor: '#9C4F1A', padding: 10, borderRadius: 10}]}>
+                <View style={{width: '70%'}}>
                     <View>
                         <Text style={styles.result}>{artist} - {title}</Text>
                     </View>
+                    <View>
+                        <Text style={[styles.result2, {color: 'black', fontWeight: 'bold', fontStyle: 'normal'}]}>({creator}) ~</Text>
+                    </View>
+                    <View>
+                        <Text style={[styles.result2, {color: 'black', fontWeight: 'bold'}]}>"{message}"</Text>
+                    </View>
                     <Text style={styles.result3}>{time}</Text>
                 </View>
-                <View style={{width: '22%'}}>
-                    <CustomButton
-                        text="Spotify"
-                        type="SPOTIFY"
-                        onPress={() => {Linking.openURL(link)}}
-                    />
+                <View style={{width: '15%'}}>
+                    <Pressable onPress={() => {Linking.openURL(link)}}>
+                        <Image
+                            style={{width: 50, height: 50}}
+                            source={{uri: 'https://cdn.discordapp.com/attachments/251038634873061376/1047353802564571217/spotify-brands-logo-34-min.png'}}
+                        />
+                    </Pressable>
                 </View>
-                <View style={{width: '22%', alignItems: 'center'}}>
-                    <CustomButton
-                        text={isLiked ? "Unlike" : "Like"}
-                        type={isLiked ? "UNLIKE" : "LIKE"}
-                        onPress={() => {onPress(title)}}
-                    />
+                <View style={{width: '15%', alignItems: 'center'}}>
+
+                    <Pressable onPress={() => {onPress(title)}}>
+                        <Image
+                            style={{width: 50, height: 50}}
+                            source={
+                                isLiked ? {uri: 'https://img.icons8.com/sf-regular-filled/512/facebook-like.png'}
+                                : {uri: 'https://img.icons8.com/sf-regular/512/facebook-like.png'}
+                            }
+                        />
+                    </Pressable>
                 </View>
             </View>
         );
@@ -197,21 +191,44 @@ const HomeScreen = ({route}) => {
         })
     }
 
+    const Error = () => {
+        if (error === '') {
+            return <Text></Text>;
+        }
+        return <Text style={styles.error}>{error}</Text>
+    }
+
     return (
         <View style={styles.base}>
             <View style={styles.root}>
-                <Text>
+                <Text style={[styles.result, {fontSize: 20, color: '#D2735C', marginBottom: 20}]}>
                     Welcome home, {name}!
                 </Text>
+
+                <CustomButton
+                    text="Share what you're listening to!"
+                    onPress={() => setVisible(true)}
+                />
+
+                <CustomButton
+                    text="Leaderboard"
+                    onPress={onBoardPressed}
+                />
 
                 <CustomButton
                     text="Find Friends"
                     onPress={onFindFriendPressed}
                 />
 
+                <CustomButton 
+                    text="Profile Page"
+                    onPress={onProfilePress}
+                />
+
                 <CustomButton
-                    text="Leaderboard"
-                    onPress={onBoardPressed}
+                    text="Sign Out"
+                    onPress={onSignoutPress}
+                    type="SECONDARY"
                 />
 
                 {/* post creation */}
@@ -248,37 +265,22 @@ const HomeScreen = ({route}) => {
                             <CustomButton
                                 text="Submit"
                                 onPress={onCreatePostPressed}
+                                type="SUBMIT"
                             />
                         </View>
                     </View>
                 </Modal>
 
-                <CustomButton
-                    text="Share what you're listening to!"
-                    onPress={() => setVisible(true)}
-                />
-
-                <CustomButton 
-                    text="Profile Page"
-                    onPress={onProfilePress}
-                />
-
-                <CustomButton
-                    text="Sign Out"
-                    onPress={onSignoutPress}
-                    type="SECONDARY"
-                />
-
                 {/* daily songs list */}
                 <Text style={styles.text}>Daily Songs</Text>
-                <Text style={styles.error}>{error}</Text>
+                <Error/>
                 <FlatList
                     extraData={likedPosts}
                     data={data}
                     keyExtractor={item => item._id}
                     renderItem={({item}) => {
                         return (
-                            <View style={{marginVertical: 5}}>
+                            <View style={{marginVertical: 10}}>
                                 <Text style={styles.result}>
                                     <Row
                                         title={item.song["title"]}
@@ -304,7 +306,6 @@ const HomeScreen = ({route}) => {
                                         }}
                                     />
                                 </Text>
-                                <Text style={styles.border}/>
                             </View>
                         )
                     }
@@ -325,7 +326,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         padding: 20,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616'
     },
 
     logo: {
@@ -342,26 +343,23 @@ const styles = StyleSheet.create({
     },
 
     modalView: {
-        margin: 20,
+        margin: 30,
         width: "100%",
+        height: "70%",
         borderRadius: 5,
-        backgroundColor: "white",
+        backgroundColor: "#DE9E48",
         alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5
+        justifyContent: 'flex-start'
     },
 
     input: {
         padding:10,
         height: 50,
         width: "100%",
-        backgroundColor: "#E6E6E6"
+        height: "20%",
+        backgroundColor: "#E6E6E6",
+        justifyContent: 'center',
+        fontSize: 30
     },
 
     result: {

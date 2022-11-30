@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, Alert, FlatList} from 'react-native';
+import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, Alert, FlatList, Linking, Pressable } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -46,43 +46,119 @@ const LeaderboardScreen = () => {
 
     return (
         <View style={styles.base}>
-            <FlatList
-                data={data}
-                keyExtractor={item => item._id}
-                renderItem={({item, index}) => {
-                    // show first item like it's a grand winner
-                    if (index === 0) {
-                        return (
-                            <View style={{marginVertical: 10}}>
-                                <Text style={styles.winner}>
-                                    {item.song["artist"]} - {item.song["title"]}
-                                </Text>
-                                <Text style={styles.winner2}>
-                                    ({item.creator["username"]})
-                                </Text>
-                                <Text style={styles.winner} >
-                                    Likes: {item.likes}
-                                </Text>
-                            </View>
-                        )
-                    } else {
-                        return (
-                            <View style={{marginVertical: 10}}>
-                                <Text style={styles.border}/>
-                                <Text style={styles.result}>
-                                    {item.song["artist"]} - {item.song["title"]}
-                                </Text>
-                                <Text style={styles.result2}>
-                                    ({item.creator["username"]}) ~ "{item.message}"
-                                </Text>
-                                <Text style={styles.result} >
-                                    Likes: {item.likes}
-                                </Text>
-                            </View>
-                        )
+            <View style={styles.root}>
+                <FlatList
+                    showsVerticalScrollIndicator={false}
+                    data={data}
+                    keyExtractor={item => item._id}
+                    renderItem={({item, index}) => {
+                        // show first item like it's a grand winner
+                        if (index === 0) {
+                            return (
+                                <View style={{alignItems: 'center', marginVertical: 10, marginBottom: 40}}>
+                                    <Image
+                                        style={{width: 100, height: 100}}
+                                        source={{uri: 'https://cdn.discordapp.com/attachments/251038634873061376/1047355705746788402/trophy.gif'}}
+                                    />
+                                    <Text style={styles.winner}>
+                                        <View style={styles.winner}>
+                                            <View style={{width: '100%'}}>
+                                                <View>
+                                                    <Text style={styles.winner}>{item.song["artist"]} - {item.song["title"]}</Text>
+                                                </View>
+                                                <View>
+                                                    <Text style={styles.winner2}>{item.creator["username"]}</Text>
+                                                </View>
+                                            </View>
+                                            <View style={{width: '100%'}}>
+                                                <Text style={[styles.winner, {fontSize: 24, color: "gold"}]}>{item.likes} likes</Text>
+                                            </View>
+                                            <View style={{}}>
+                                                <Pressable onPress={() => {Linking.openURL(link)}}>
+                                                    <Image
+                                                        style={{width: 50, height: 50}}
+                                                        source={{uri: 'https://cdn.discordapp.com/attachments/251038634873061376/1047353802564571217/spotify-brands-logo-34-min.png'}}
+                                                    />
+                                                </Pressable>
+                                            </View>
+                                        </View>
+                                    </Text>
+                                </View>
+                            )
+                        } else if (index === 1) {
+                            return (
+                                <View style={{marginVertical: 10}}>
+                                    <View style={{flexDirection: 'row', alignSelf: 'center'}}>
+                                        <Image
+                                            style={{width: 70, height: 70, alignSelf: 'center', marginBottom: 5}}
+                                            source={{uri: 'https://cdn.discordapp.com/attachments/251038634873061376/1047357813820764180/clap.gif'}}
+                                        />
+                                        <Image
+                                            style={{width: 70, height: 70, alignSelf: 'center', marginBottom: 5}}
+                                            source={{uri: 'https://cdn.discordapp.com/attachments/251038634873061376/1047357813820764180/clap.gif'}}
+                                        />
+                                        <Image
+                                            style={{width: 70, height: 70, alignSelf: 'center', marginBottom: 5}}
+                                            source={{uri: 'https://cdn.discordapp.com/attachments/251038634873061376/1047357813820764180/clap.gif'}}
+                                        />
+                                    </View>
+                                    <Text style={styles.result}>
+                                        <View style={[styles.result, {backgroundColor: '#9C4F1A', padding: 10, borderRadius: 10}]}>
+                                            <View style={{width: '65%'}}>
+                                                <View>
+                                                    <Text style={styles.result}>{item.song["artist"]} - {item.song["title"]}</Text>
+                                                </View>
+                                                <View>
+                                                    <Text style={styles.result2}>{item.creator["username"]}</Text>
+                                                </View>
+                                            </View>
+                                            <View style={{width: '20%'}}>
+                                                <Text style={[styles.result3, {fontSize: 18}]}>{item.likes} likes</Text>
+                                            </View>
+                                            <View style={{width: '20%'}}>
+                                                <Pressable onPress={() => {Linking.openURL(link)}}>
+                                                    <Image
+                                                        style={{width: 50, height: 50}}
+                                                        source={{uri: 'https://cdn.discordapp.com/attachments/251038634873061376/1047353802564571217/spotify-brands-logo-34-min.png'}}
+                                                    />
+                                                </Pressable>
+                                            </View>
+                                        </View>
+                                    </Text>
+                                </View>
+                            )
+                        } else {
+                            return (
+                                <View style={{marginVertical: 10}}>
+                                    <Text style={styles.result}>
+                                        <View style={[styles.result, {backgroundColor: '#9C4F1A', padding: 10, borderRadius: 10}]}>
+                                            <View style={{width: '65%'}}>
+                                                <View>
+                                                    <Text style={styles.result}>{item.song["artist"]} - {item.song["title"]}</Text>
+                                                </View>
+                                                <View>
+                                                    <Text style={styles.result2}>{item.creator["username"]}</Text>
+                                                </View>
+                                            </View>
+                                            <View style={{width: '20%'}}>
+                                                <Text style={[styles.result3, {fontSize: 18}]}>{item.likes} likes</Text>
+                                            </View>
+                                            <View style={{width: '20%'}}>
+                                                <Pressable onPress={() => {Linking.openURL(link)}}>
+                                                    <Image
+                                                        style={{width: 50, height: 50}}
+                                                        source={{uri: 'https://cdn.discordapp.com/attachments/251038634873061376/1047353802564571217/spotify-brands-logo-34-min.png'}}
+                                                    />
+                                                </Pressable>
+                                            </View>
+                                        </View>
+                                    </Text>
+                                </View>
+                            )
+                        }
                     }
-                }
-            }/>
+                }/>
+            </View>
         </View>
     )
 }
@@ -95,9 +171,10 @@ const styles = StyleSheet.create({
     },
 
     root: {
+        flex: 1,
         alignItems: 'center',
         padding: 20,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616'
     },
 
     logo: {
@@ -117,24 +194,31 @@ const styles = StyleSheet.create({
     },
 
     result: {
+        flexDirection: 'row',
         fontSize: 14,
         fontWeight: "bold",
         color: "white",
-        marginLeft: 10
     },
 
     result2: {
         fontSize: 12,
         fontStyle: "italic",
         color: "white",
-        marginLeft: 10
     },
 
     result3: {
         fontSize: 10,
         fontStyle: "italic",
         color: "lightgray",
-        marginLeft: 10
+    },
+
+    error: {
+        flex: 1,
+        fontSize: 30,
+        fontWeight: "bold",
+        color: "white",
+        alignItems: "center",
+        justifyContent: "center",
     },
 
     border: {
@@ -145,17 +229,21 @@ const styles = StyleSheet.create({
     },
 
     winner: {
+        flexDirection: 'column',
         fontSize: 22,
         fontWeight: "bold",
         color: "orange",
-        marginLeft: 10
+        alignItems: "center",
+        textAlign: 'center'
     },
 
     winner2: {
+        flexDirection: 'column',
         fontSize: 18,
         fontStyle: "italic",
         color: "orange",
-        marginLeft: 10
+        alignItems: "center",
+        textAlign: 'center'
     }
 });
 

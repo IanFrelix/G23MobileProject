@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-    View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TextInput, FlatList 
+    View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TextInput, FlatList, Pressable
 } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
@@ -90,7 +90,7 @@ const PostsScreen = () => {
                             <View style={{marginVertical: 10}}>
                                 <Text style={styles.result}>
                                     <View style={styles.result}>
-                                        <View style={{width: '56%'}}>
+                                        <View style={{width: '60%'}}>
                                             <View>
                                                 <Text style={styles.result}>{item.song["artist"]} - {item.song["title"]}</Text>
                                             </View>
@@ -100,14 +100,15 @@ const PostsScreen = () => {
                                             </View>
                                             <Text style={styles.result3}>{item.updatedAt}</Text>
                                         </View>
-                                        <View style={{width: '22%'}}>
-                                            <CustomButton
-                                                text="Spotify"
-                                                type="SPOTIFY"
-                                                onPress={() => {Linking.openURL(item.song["url"])}}
-                                            />
+                                        <View style={{width: '20%'}}>
+                                            <Pressable onPress={() => {Linking.openURL(link)}}>
+                                                <Image
+                                                    style={{width: 50, height: 50}}
+                                                    source={{uri: 'https://cdn.discordapp.com/attachments/251038634873061376/1047353802564571217/spotify-brands-logo-34-min.png'}}
+                                                />
+                                            </Pressable>
                                         </View>
-                                        <View style={{width: '22%', alignItems: 'center'}}>
+                                        <View style={{width: '20%', alignItems: 'center'}}>
                                             <CustomButton
                                                 text="Delete"
                                                 onPress={() => {deletePost(item._id)}}
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         padding: 20,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616'
     },
 
     logo: {
@@ -173,6 +174,15 @@ const styles = StyleSheet.create({
         fontSize: 10,
         fontStyle: "italic",
         color: "lightgray"
+    },
+
+    error: {
+        flex: 1,
+        fontSize: 30,
+        fontWeight: "bold",
+        color: "white",
+        alignItems: "center",
+        justifyContent: "center",
     },
 
     border: {
