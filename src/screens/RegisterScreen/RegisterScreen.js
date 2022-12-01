@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
+import { Text, View, Image, StyleSheet, useWindowDimensions, ScrollView, KeyboardAvoidingView } from 'react-native';
 import Logo from '../../../assets/G23Images/musicnote.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
+import CustomHeader from '../../components/CustomHeader';
 import { useNavigation } from '@react-navigation/native';
 
 const RegisterScreen = () => {
@@ -12,6 +13,7 @@ const RegisterScreen = () => {
     const [username, setUsername] = useState(''); 
     const [email, setEmail] = useState(''); 
     const [password, setPassword] = useState(''); 
+    const [result, setResult] = useState('');
     
     const {height} = useWindowDimensions();
     const navigation = useNavigation();
@@ -30,9 +32,7 @@ const RegisterScreen = () => {
         .then(res => res.json())
         .then(res => {
             if (res.success) {
-                console.warn(res.message);
-
-                console.log(obj)
+                setResult(res.message);
                 navigation.navigate('SignIn');
             }
             else {
@@ -46,47 +46,55 @@ const RegisterScreen = () => {
     }
 
     return (
-        <ScrollView showsVerticalScrollIndicator={false} style={styles.base}>
+        <View style={styles.base}>
             <View style={styles.root}>
-                <Image source={Logo} 
-                style={[styles.logo, {height: height * 0.3}]} 
-                resizeMode="contain"/>
+                <KeyboardAvoidingView behavior={'position'}>
+                    <Image
+                        source={{uri: 'https://cdn.discordapp.com/attachments/251038634873061376/1047342960498442362/table2.gif'}}
+                        style={[styles.logo, {height: height * 0.3}]}
+                        resizeMode='cover'
+                    />
 
-                <CustomInput 
-                placeholder="First Name" 
-                value={firstName} 
-                setValue={setFirstName}
-                />
+                    <CustomHeader />
 
-                <CustomInput 
-                placeholder="Last Name" 
-                value={lastName} 
-                setValue={setLastName}
-                />
+                    <CustomInput 
+                    placeholder="First Name" 
+                    value={firstName} 
+                    setValue={setFirstName}
+                    />
 
-                <CustomInput 
-                placeholder="Username" 
-                value={username} 
-                setValue={setUsername}
-                />
+                    <CustomInput 
+                    placeholder="Last Name" 
+                    value={lastName} 
+                    setValue={setLastName}
+                    />
 
-                <CustomInput 
-                placeholder="Email" 
-                value={email} 
-                setValue={setEmail}
-                />
+                    <CustomInput 
+                    placeholder="Username" 
+                    value={username} 
+                    setValue={setUsername}
+                    />
 
-                <CustomInput 
-                placeholder="Password" 
-                value={password} 
-                setValue={setPassword}
-                secureTextEntry
-                />
+                    <CustomInput 
+                    placeholder="Email" 
+                    value={email} 
+                    setValue={setEmail}
+                    />
 
-                <CustomButton 
-                    text="Create Account" 
-                    onPress={onSignUpPressed} 
-                />
+                    <CustomInput 
+                    placeholder="Password" 
+                    value={password} 
+                    setValue={setPassword}
+                    secureTextEntry
+                    />
+
+                    <CustomButton 
+                        text="Create Account" 
+                        onPress={onSignUpPressed} 
+                    />
+
+                    <Text style={styles.result}>{result}</Text>
+                </KeyboardAvoidingView>
 
                 <CustomButton 
                     text="Already have an account? Sign in here!" 
@@ -94,7 +102,7 @@ const RegisterScreen = () => {
                     type="TERTIARY" 
                 />
             </View>
-        </ScrollView>
+        </View>
     );
 };
 
@@ -102,21 +110,33 @@ const styles = StyleSheet.create({
 
     base: {
         flex: 1,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616',
+        justifyContent: 'flex-end',
     },
 
     root: {
-        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'flex-end',
         padding: 20,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616'
     },
 
     logo: {
-        width: '95%',
-        maxWidth: 500,
-        maxHeight: 100,
-
+        borderWidth: 10,
+        borderColor: '#7A431D',
+        padding: 0,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'fle',
+        flexDirection: 'column'
     },
+
+    result: {
+        flexDirection: 'row',
+        fontSize: 14,
+        fontWeight: "bold",
+        color: "white"
+    }
 });
 
 export default RegisterScreen

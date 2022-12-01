@@ -143,19 +143,19 @@ const FriendScreen = () => {
                                         style={styles.logo} 
                                         resizeMode="contain"
                                     />
-                                    <View style={{width: '35%'}}>
-                                        <Text style={[styles.result, {fontSize: 16}]}>
+                                    <View style={{width: '35%', justifyContent: 'center', alignItems: 'center'}}>
+                                        <Text style={[styles.result, {fontSize: 30}]}>
                                             {item.username}
                                         </Text>
                                     </View>
-                                    <View style={{width: '23%'}}>
+                                    <View style={{width: '23%', justifyContent: 'center'}}>
                                         <CustomButton
                                             text="Unfriend"
                                             onPress={() => {deleteFriend(item.id);}}
                                             type="UNFRIEND"
                                         />
                                     </View>
-                                    <View style={{width: '23%'}}>
+                                    <View style={{width: '23%',justifyContent: 'center'}}>
                                         <CustomButton
                                             text="Block"
                                             onPress={() => {blockUser(item.id);}}
@@ -177,14 +177,14 @@ const styles = StyleSheet.create({
 
     base: {
         flex: 1,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616'
     },
 
     root: {
         flex: 1,
         alignItems: 'center',
         padding: 20,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616'
     },
 
     logo: {

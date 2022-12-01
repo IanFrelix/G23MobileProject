@@ -5,7 +5,7 @@ const CustomHeader = () => {
     return (
         <View>
             <Text style={styles.text}>
-                TuneTable23 
+                tunetable!
             </Text>
         </View>
     );
@@ -14,9 +14,10 @@ const CustomHeader = () => {
 const styles = StyleSheet.create({
     text: {
         fontweight: 'bold',
-        fontSize: 22,
+        fontSize: 40,
         textAlign: 'center',
         marginVertical: 10,
+        color: '#D2735C'
     },
     
 });

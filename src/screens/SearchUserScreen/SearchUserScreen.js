@@ -16,6 +16,7 @@ const SearchUserScreen = () => {
     const [id, setID] = useState('');
     const [token, setToken] = useState('');
     const [error, setError] = useState('');
+    const [result, setResult] = useState('');
 
     // retrieve user id & token
     AsyncStorage.multiGet(['user', 'token'])
@@ -46,6 +47,7 @@ const SearchUserScreen = () => {
                         setError(res.message);
                         setData('');
                     } else {
+                        setError('');
                         setData(res.results);
                     }
                 }
@@ -69,6 +71,8 @@ const SearchUserScreen = () => {
         .then(res => {
             if (res.success) {
                 console.log(res.message);
+                setResult(res.message);
+                onSearch();
                 // if success, res.results = 0
             }
             else {
@@ -90,6 +94,7 @@ const SearchUserScreen = () => {
         .then(res => {
             if (res.success) {
                 console.log(res.message);
+                setResult(res.message);
                 onSearch(); // refresh
             }
             else {
@@ -105,21 +110,30 @@ const SearchUserScreen = () => {
         return <Text style={styles.error}>{error}</Text>
     }
 
+    const Result = () => {
+        return <Text style={styles.result}>{result}</Text>
+    }
+
     return (
         <View style={styles.base}>
-            <View style={styles.search}>
-                <TextInput 
-                    value={input}
-                    onChangeText={text => setInput(text)}
-                    placeholder="Search user" 
-                />
-                <CustomButton
-                    text="Search"
-                    onPress={onSearch}
-                    type="SEARCH"
-                />
+            <View style={{flexDirection: 'row'}}>
+                <View style={[styles.search, {width: '70%', marginRight: 30}]}>
+                    <TextInput 
+                        value={input}
+                        onChangeText={text => setInput(text)}
+                        placeholder="Search user" 
+                    />
+                </View>
+                <View style={{width: '70%'}}>
+                    <CustomButton
+                        text="Search"
+                        onPress={onSearch}
+                        type="SEARCH"
+                    />
+                </View>
             </View>
             <Error/>
+            <Result/>
             <FlatList
                 data={data} 
                 keyExtractor={item => item._id}
@@ -142,14 +156,14 @@ const SearchUserScreen = () => {
                                     <View style={{width: '23%'}}>
                                         <CustomButton
                                             text="Friend"
-                                            onPress={() => {addFriend(item.id);}}
-                                            type="FRIEND"
+                                            onPress={() => {addFriend(item._id);}}
+                                            type="ADD   "
                                         />
                                     </View>
                                     <View style={{width: '23%'}}>
                                         <CustomButton
                                             text="Block"
-                                            onPress={() => {blockUser(item.id);}}
+                                            onPress={() => {blockUser(item._id);}}
                                             type="BLOCK"
                                         />
                                     </View>
@@ -167,14 +181,14 @@ const SearchUserScreen = () => {
 const styles = StyleSheet.create({
     base: {
         flex: 1,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616'
     },
 
     root: {
         flex: 1,
         alignItems: 'center',
         padding: 20,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616'
     },
 
     logo: {

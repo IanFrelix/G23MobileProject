@@ -111,12 +111,20 @@ const BlockedScreen = () => {
                     return (
                         <View style={{marginVertical: 10}}>
                             <Text style={styles.result}>
-                                {item.username} 
-                                <CustomButton
-                                    text="Unblock"
-                                    onPress={() => {unblockUser(item.id);}}
-                                    type="FRIEND"
-                                />
+                                <View style={styles.result}>
+                                    <View style={{width: '70%', justifyContent: 'center'}}>
+                                        <Text style={[styles.result, {fontSize: 24, justifyContent: 'center'}]}>
+                                            {item.username}
+                                        </Text>
+                                    </View>
+                                    <View style={{width: '25%', justifyContent: 'center'}}>
+                                        <CustomButton
+                                            text="Unblock"
+                                            onPress={() => {unblockUser(item.id);}}
+                                            type="FRIEND"
+                                        />
+                                    </View>
+                                </View>
                             </Text>
                             <Text style={styles.border}/>
                         </View>
@@ -131,13 +139,14 @@ const styles = StyleSheet.create({
 
     base: {
         flex: 1,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616'
     },
 
     root: {
+        flex: 1,
         alignItems: 'center',
         padding: 20,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616'
     },
 
     logo: {
@@ -157,6 +166,7 @@ const styles = StyleSheet.create({
     },
 
     result: {
+        flexDirection: 'row',
         fontSize: 14,
         fontWeight: "bold",
         color: "white",

@@ -48,7 +48,7 @@ const ProfileScreen = () => {
         .then(res => res.json())
         .then(res => {
             if (res.success) {
-                console.warn(res.message);
+                console.log(res.message);
 
                 navigation.navigate('SignIn');
             }
@@ -113,7 +113,7 @@ const ProfileScreen = () => {
     }
 
     return (
-        <ScrollView showsVerticalScrollIndicator={false} style={styles.base}>
+        <View style={styles.base}>
             <View style={styles.root}>
                 <SvgUri
                     uri={url}
@@ -121,12 +121,8 @@ const ProfileScreen = () => {
                     resizeMode="contain"
                 />
                 <View style={[styles.result, {marginVertical: 10}]}>
-                    <Text style={[styles.result, {fontSize: 24, color: 'white'}]}>
+                    <Text style={[styles.result, {fontSize: 30, color: 'white'}]}>
                         {username}
-                    </Text>
-                    
-                    <Text style={[styles.result, {color: 'white'}]}>
-                        Total Likes: {totalLikes}
                     </Text>
                     
                 </View>
@@ -142,17 +138,17 @@ const ProfileScreen = () => {
                     text="Blocked Users"
                     onPress={onBlockedPress}
                 />
-                <CustomButton
+                {/* <CustomButton
                     text="Change Password"
                     onPress={sendReset}
-                />
+                /> */}
                 <CustomButton
                     text="Delete Account"
                     onPress={deleteAlert}
                     type="SECONDARY"
                 />
             </View>
-        </ScrollView>
+        </View>
     )
 }
 
@@ -160,13 +156,13 @@ const styles = StyleSheet.create({
 
     base: {
         flex: 1,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616'
     },
 
     root: {
         alignItems: 'center',
         padding: 20,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616'
     },
 
     logo: {

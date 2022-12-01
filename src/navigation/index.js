@@ -41,7 +41,8 @@ const styles = StyleSheet.create({
         headerTitle: "",
         headerBackVisible: true,
         borderBottomWidth: 0,
-        headerStyle: {backgroundColor: '#3d3d3d'}
+        headerStyle: {backgroundColor: '#1F1616'},
+        headerTintColor: '#D2735C'
     }
 });
 

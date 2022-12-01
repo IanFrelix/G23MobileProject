@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-    View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TextInput, FlatList 
+    View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TextInput, FlatList, Pressable
 } from 'react-native';
 import Logo from '../../../assets/G23Images/musicnote.png';
 import CustomInput from '../../components/CustomInput';
@@ -13,6 +13,7 @@ const SearchSongScreen = () => {
 
     const [input, setInput] = useState('');
     const [data, setData] = useState([]);
+    const [error, setError] = useState('');
 
     const navigation = useNavigation();
 
@@ -27,7 +28,12 @@ const SearchSongScreen = () => {
             .then(res => {
                 if (res.success) {
                     console.log(res.message);
-                    setData(res.results);
+                    if (!(res.results).length) {
+                        setError(res.message);
+                        setData('');
+                    } else {
+                        setData(res.results);
+                    }
                 }
                 else {
                     console.warn(res);
@@ -35,21 +41,33 @@ const SearchSongScreen = () => {
             })
         }
     }
+    
+    const Error = () => {
+        if (error === '') {
+            return <Text></Text>;
+        }
+        return <Text style={styles.error}>{error}</Text>
+    }
 
     return (
         <View style={styles.base}>
-            <View style={styles.search}>
-                <TextInput 
-                    value={input}
-                    onChangeText={text => setInput(text)}
-                    placeholder="Search song" 
-                />
-                <CustomButton
-                    text="Search"
-                    onPress={onSearch}
-                    type="SEARCH"
-                />
+            <View style={{flexDirection: 'row'}}>
+                <View style={[styles.search, {width: '80%'}]}>
+                    <TextInput 
+                        value={input}
+                        onChangeText={text => setInput(text)}
+                        placeholder="Search song" 
+                    />
+                </View>
+                <View style={{width: '70%'}}>
+                    <CustomButton
+                        text="Search"
+                        onPress={onSearch}
+                        type="SEARCH"
+                    />
+                </View>
             </View>
+            <Error/>
             <FlatList
                 data={data} 
                 keyExtractor={item => item._id}
@@ -57,21 +75,37 @@ const SearchSongScreen = () => {
                     return (
                         <View style={{marginVertical: 10}}>
                             <Text style={styles.result}>
-                                {item.artist} - {item.title}
-                                <CustomButton
-                                    text="Add"
-                                    onPress={() => {
-                                        navigation.navigate({
-                                            name: 'Home',
-                                            params: {
-                                                songId: item._id,
-                                                songTitle: item.title,
-                                                songArtist: item.artist
-                                            }
-                                        });
-                                    }}
-                                    type="FRIEND"
-                                />
+                                <View style={styles.result}>
+                                    <View style={{width: '65%'}}>
+                                        <Text style={[styles.result, {fontSize: 16, justifyContent: 'center'}]}>
+                                            {item.artist} - {item.title}
+                                        </Text>
+                                    </View>
+                                    <View style={{width: '15%'}}>
+                                        <Pressable onPress={() => {Linking.openURL(item.song["url"])}}>
+                                            <Image
+                                                style={{width: 50, height: 50}}
+                                                source={{uri: 'https://cdn.discordapp.com/attachments/251038634873061376/1047353802564571217/spotify-brands-logo-34-min.png'}}
+                                            />
+                                        </Pressable>
+                                    </View>
+                                    <View style={{width: '20%'}}>
+                                        <CustomButton
+                                            text="Add"
+                                            onPress={() => {
+                                                navigation.navigate({
+                                                    name: 'Home',
+                                                    params: {
+                                                        songId: item._id,
+                                                        songTitle: item.title,
+                                                        songArtist: item.artist
+                                                    }
+                                                });
+                                            }}
+                                            type="ADD"
+                                        />
+                                    </View>
+                                </View>
                             </Text>
                             <Text style={styles.border}/>
                         </View>
@@ -86,13 +120,14 @@ const styles = StyleSheet.create({
 
     base: {
         flex: 1,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616'
     },
 
     root: {
+        flex: 1,
         alignItems: 'center',
         padding: 20,
-        backgroundColor: '#3d3d3d'
+        backgroundColor: '#1F1616'
     },
 
     logo: {
@@ -112,10 +147,31 @@ const styles = StyleSheet.create({
     },
 
     result: {
+        flexDirection: 'row',
         fontSize: 14,
         fontWeight: "bold",
+        color: "white"
+    },
+
+    result2: {
+        fontSize: 12,
+        fontStyle: "italic",
+        color: "white"
+    },
+
+    result3: {
+        fontSize: 10,
+        fontStyle: "italic",
+        color: "lightgray"
+    },
+
+    error: {
+        flex: 1,
+        fontSize: 30,
+        fontWeight: "bold",
         color: "white",
-        marginLeft: 10
+        alignItems: "center",
+        justifyContent: "center",
     },
 
     border: {
