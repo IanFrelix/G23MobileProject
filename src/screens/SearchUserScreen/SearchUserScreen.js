@@ -16,6 +16,7 @@ const SearchUserScreen = () => {
     const [id, setID] = useState('');
     const [token, setToken] = useState('');
     const [error, setError] = useState('');
+    const [result, setResult] = useState('');
 
     // retrieve user id & token
     AsyncStorage.multiGet(['user', 'token'])
@@ -70,6 +71,8 @@ const SearchUserScreen = () => {
         .then(res => {
             if (res.success) {
                 console.log(res.message);
+                setResult(res.message);
+                onSearch();
                 // if success, res.results = 0
             }
             else {
@@ -91,6 +94,7 @@ const SearchUserScreen = () => {
         .then(res => {
             if (res.success) {
                 console.log(res.message);
+                setResult(res.message);
                 onSearch(); // refresh
             }
             else {
@@ -106,10 +110,14 @@ const SearchUserScreen = () => {
         return <Text style={styles.error}>{error}</Text>
     }
 
+    const Result = () => {
+        return <Text style={styles.result}>{result}</Text>
+    }
+
     return (
         <View style={styles.base}>
             <View style={{flexDirection: 'row'}}>
-                <View style={[styles.search, {width: '80%'}]}>
+                <View style={[styles.search, {width: '70%', marginRight: 30}]}>
                     <TextInput 
                         value={input}
                         onChangeText={text => setInput(text)}
@@ -125,6 +133,7 @@ const SearchUserScreen = () => {
                 </View>
             </View>
             <Error/>
+            <Result/>
             <FlatList
                 data={data} 
                 keyExtractor={item => item._id}
@@ -148,7 +157,7 @@ const SearchUserScreen = () => {
                                         <CustomButton
                                             text="Friend"
                                             onPress={() => {addFriend(item._id);}}
-                                            type="ADD"
+                                            type="ADD   "
                                         />
                                     </View>
                                     <View style={{width: '23%'}}>

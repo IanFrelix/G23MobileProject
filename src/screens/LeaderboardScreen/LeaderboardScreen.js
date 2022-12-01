@@ -67,7 +67,7 @@ const LeaderboardScreen = () => {
                                                     <Text style={styles.winner}>{item.song["artist"]} - {item.song["title"]}</Text>
                                                 </View>
                                                 <View>
-                                                    <Text style={styles.winner2}>{item.creator["username"]}</Text>
+                                                    <Text style={styles.winner2}>{item.creator["username"]} ~ "{item.message}"</Text>
                                                 </View>
                                             </View>
                                             <View style={{width: '100%'}}>
@@ -109,7 +109,7 @@ const LeaderboardScreen = () => {
                                                     <Text style={styles.result}>{item.song["artist"]} - {item.song["title"]}</Text>
                                                 </View>
                                                 <View>
-                                                    <Text style={styles.result2}>{item.creator["username"]}</Text>
+                                                    <Text style={styles.result2}>{item.creator["username"]} ~ "{item.message}"</Text>
                                                 </View>
                                             </View>
                                             <View style={{width: '20%'}}>
@@ -137,7 +137,7 @@ const LeaderboardScreen = () => {
                                                     <Text style={styles.result}>{item.song["artist"]} - {item.song["title"]}</Text>
                                                 </View>
                                                 <View>
-                                                    <Text style={styles.result2}>{item.creator["username"]}</Text>
+                                                    <Text style={styles.result2}>{item.creator["username"]} ~ "{item.message}"</Text>
                                                 </View>
                                             </View>
                                             <View style={{width: '20%'}}>

@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     container_SEARCH: {
         flexDirection: 'row',
         width: '30%',
-        backgroundColor: '#3B71F3',
+        backgroundColor: '#D2735C',
         borderWidth: 0
     },
 

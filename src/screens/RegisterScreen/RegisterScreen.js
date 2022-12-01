@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
+import { Text, View, Image, StyleSheet, useWindowDimensions, ScrollView, KeyboardAvoidingView } from 'react-native';
 import Logo from '../../../assets/G23Images/musicnote.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
@@ -13,6 +13,7 @@ const RegisterScreen = () => {
     const [username, setUsername] = useState(''); 
     const [email, setEmail] = useState(''); 
     const [password, setPassword] = useState(''); 
+    const [result, setResult] = useState('');
     
     const {height} = useWindowDimensions();
     const navigation = useNavigation();
@@ -31,9 +32,7 @@ const RegisterScreen = () => {
         .then(res => res.json())
         .then(res => {
             if (res.success) {
-                console.warn(res.message);
-
-                console.log(obj)
+                setResult(res.message);
                 navigation.navigate('SignIn');
             }
             else {
@@ -49,50 +48,53 @@ const RegisterScreen = () => {
     return (
         <View style={styles.base}>
             <View style={styles.root}>
+                <KeyboardAvoidingView behavior={'position'}>
+                    <Image
+                        source={{uri: 'https://cdn.discordapp.com/attachments/251038634873061376/1047342960498442362/table2.gif'}}
+                        style={[styles.logo, {height: height * 0.3}]}
+                        resizeMode='cover'
+                    />
 
-                <Image
-                    source={{uri: 'https://cdn.discordapp.com/attachments/251038634873061376/1047342960498442362/table2.gif'}}
-                    style={[styles.logo, {height: height * 0.3}]}
-                    resizeMode='cover'
-                />
+                    <CustomHeader />
 
-                <CustomHeader />
+                    <CustomInput 
+                    placeholder="First Name" 
+                    value={firstName} 
+                    setValue={setFirstName}
+                    />
 
-                <CustomInput 
-                placeholder="First Name" 
-                value={firstName} 
-                setValue={setFirstName}
-                />
+                    <CustomInput 
+                    placeholder="Last Name" 
+                    value={lastName} 
+                    setValue={setLastName}
+                    />
 
-                <CustomInput 
-                placeholder="Last Name" 
-                value={lastName} 
-                setValue={setLastName}
-                />
+                    <CustomInput 
+                    placeholder="Username" 
+                    value={username} 
+                    setValue={setUsername}
+                    />
 
-                <CustomInput 
-                placeholder="Username" 
-                value={username} 
-                setValue={setUsername}
-                />
+                    <CustomInput 
+                    placeholder="Email" 
+                    value={email} 
+                    setValue={setEmail}
+                    />
 
-                <CustomInput 
-                placeholder="Email" 
-                value={email} 
-                setValue={setEmail}
-                />
+                    <CustomInput 
+                    placeholder="Password" 
+                    value={password} 
+                    setValue={setPassword}
+                    secureTextEntry
+                    />
 
-                <CustomInput 
-                placeholder="Password" 
-                value={password} 
-                setValue={setPassword}
-                secureTextEntry
-                />
+                    <CustomButton 
+                        text="Create Account" 
+                        onPress={onSignUpPressed} 
+                    />
 
-                <CustomButton 
-                    text="Create Account" 
-                    onPress={onSignUpPressed} 
-                />
+                    <Text style={styles.result}>{result}</Text>
+                </KeyboardAvoidingView>
 
                 <CustomButton 
                     text="Already have an account? Sign in here!" 
@@ -128,6 +130,13 @@ const styles = StyleSheet.create({
         justifyContent: 'fle',
         flexDirection: 'column'
     },
+
+    result: {
+        flexDirection: 'row',
+        fontSize: 14,
+        fontWeight: "bold",
+        color: "white"
+    }
 });
 
 export default RegisterScreen

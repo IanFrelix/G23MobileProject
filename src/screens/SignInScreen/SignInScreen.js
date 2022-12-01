@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
+import { Text, View, Image, StyleSheet, useWindowDimensions, ScrollView, KeyboardAvoidingView } from 'react-native';
 import Logo from '../../../assets/G23Images/musicnote.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
@@ -11,6 +11,7 @@ const SignInScreen = () => {
     
     const [username, setUsername] = useState(''); 
     const [password, setPassword] = useState(''); 
+    const [result, setResult] = useState('');
 
     const {height} = useWindowDimensions();
     const navigation = useNavigation();
@@ -34,11 +35,11 @@ const SignInScreen = () => {
                         ['user', JSON.stringify(res.results)],
                         ['token', res.token]
                     ]);
-
+                    setResult(res.message);
                     navigation.navigate('Home');
                 }
                 else {
-                    console.warn(res);
+                    setResult("Invalid User!");
                 }
             })
         }
@@ -59,30 +60,34 @@ const SignInScreen = () => {
     return (
         <View style={styles.base}>
             <View style={styles.root}>
-                <Image
-                    source={{uri: 'https://cdn.discordapp.com/attachments/251038634873061376/1047337117249974302/table.gif'}}
-                    style={[styles.logo, {height: height * 0.5}]}
-                    resizeMode='cover'
-                />
-                <CustomHeader />
+                <KeyboardAvoidingView behavior={'position'}>
+                    <Image
+                        source={{uri: 'https://cdn.discordapp.com/attachments/251038634873061376/1047337117249974302/table.gif'}}
+                        style={[styles.logo, {height: height * 0.5}]}
+                        resizeMode='cover'
+                    />
+                    <CustomHeader />
 
-                <CustomInput 
-                    placeholder="Username" 
-                    value={username} 
-                    setValue={setUsername}
-                />
+                    <CustomInput 
+                        placeholder="Username" 
+                        value={username} 
+                        setValue={setUsername}
+                    />
 
-                <CustomInput 
-                    placeholder="Password" 
-                    value={password} 
-                    setValue={setPassword}
-                    secureTextEntry={true}
-                />
+                    <CustomInput 
+                        placeholder="Password" 
+                        value={password} 
+                        setValue={setPassword}
+                        secureTextEntry={true}
+                    />
 
-                <CustomButton 
-                    text="Sign In" 
-                    onPress={onSignInPressed} 
-                />
+                    <CustomButton 
+                        text="Sign In" 
+                        onPress={onSignInPressed} 
+                    />
+
+                    <Text style={styles.result}>{result}</Text>
+                </KeyboardAvoidingView>
 
                 {/* <CustomButton 
                     text="Forgot password?" 
@@ -121,6 +126,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column'
+    },
+
+    result: {
+        fontSize: 14,
+        fontWeight: "bold",
+        color: "white",
+        alignContent: 'center'
     },
 });
 
